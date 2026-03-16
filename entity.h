@@ -48,7 +48,7 @@ class PlayerEntity : public Entity {
         int defense;
         int agility;
         int accuracy;
-        Item weapon;
+        inline static Item weapon;
 
     public:
         int get_defense(void) const;
@@ -64,6 +64,7 @@ class PlayerEntity : public Entity {
 
 // Player entities
 class Human : public PlayerEntity {
+    inline static Item weapon = Item::sword;
 };
 
 class Dwarf : public PlayerEntity {

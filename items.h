@@ -1,13 +1,14 @@
 #ifndef _ITEMS_H_
 #define _ITEMS_H_
 
+#include <string>
+
 enum Item {
-    wooden_sword,
-    iron_sword,
-    stone_axe,
-    iron_axe,
+    sword,
+    axe,
     bow,
-    crossbow
 };
+
+std::string item_name(Item item);
 
 #endif
