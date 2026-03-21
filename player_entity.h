@@ -25,12 +25,12 @@ class PlayerEntity : public Entity {
 
     public:
         string get_name(void) const;
-        int get_level(void) const;
         virtual string get_label(void) const;  // string label of name + race etc.
-        virtual string get_race(void) const;  // each class should return human/elf/dwarf etc.
+        int get_level(void) const;
         int get_defense(void) const;
         int get_agility(void) const;
         int get_accuracy(void) const;
+        string get_race(void) const override;
         Item get_weapon(void) const override;
 
         void set_name(string new_name);
@@ -38,6 +38,8 @@ class PlayerEntity : public Entity {
         void set_defense(int new_val);
         void set_agility(int new_val);
         void set_accuracy(int new_val);
+
+        void print_info(void) const override;
 };
 
 // Player entities

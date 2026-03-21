@@ -23,6 +23,7 @@ class Entity {
         int get_damage(void) const;
         int get_max_health(void) const;
         int get_health(void) const;
+        virtual string get_race(void) const;
         virtual Item get_weapon(void) const;
 
         void set_speed(int new_val);

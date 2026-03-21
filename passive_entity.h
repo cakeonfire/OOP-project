@@ -12,6 +12,9 @@ class PassiveEntity : public Entity {
     public:
         bool is_grown(void);
         virtual bool is_tamable(void) const;
+        string get_race(void) const override;
+        Item get_weapon(void) const override;
+        void print_info(void) const override;
 
         void set_grown(bool new_grown_state);
 };
@@ -24,6 +27,9 @@ class Sheep : public PassiveEntity {
     protected:
 
     public:
+        string get_race(void) const override;
+        Item get_weapon(void) const override;
+        void print_info(void) const override;
         bool is_tamable(void) const override;
 };
 
@@ -34,6 +40,9 @@ class Wolf : public PassiveEntity {
         static constexpr bool tamable = true;
 
     public:
+        string get_race(void) const override;
+        Item get_weapon(void) const override;
+        void print_info(void) const override;
         bool is_tamable(void) const override;
 };
 

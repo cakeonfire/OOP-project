@@ -5,7 +5,14 @@
 
 class Villager : public PassiveEntity {
     // each of the subclasses should implement their own trade function (which only displays trade info)
+    private:
 
+    protected:
+
+    public:
+        string get_race(void) const override;
+        Item get_weapon(void) const override;
+        void print_info(void) const override;
 };
 
 
