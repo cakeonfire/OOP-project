@@ -11,20 +11,18 @@ class PlayerEntity : public Entity {
     // subclasses should implement special stat variations
 
     protected:
-        PlayerEntity();
+        PlayerEntity(string name, int level, double max_h, double health, double damage, int speed, int defense, int agility, int accuracy);
         ~PlayerEntity();
 
         string name;
-        //int stamina;
-        //int money;
         int level;
         int defense;
         int agility;
         int accuracy;
-        //static constexpr Item weapon; - define only at sub-class level - consts and constexprs have to be defined immediately
 
     public:
-        string get_name(void) const;
+        const string& get_name(void) const;
+        // REVIEW it might make no sense to override get_label for each player subclass as it uses common vars
         virtual string get_label(void) const;  // string label of name + race etc.
         int get_level(void) const;
         int get_defense(void) const;
@@ -51,13 +49,17 @@ class Human : public PlayerEntity {
     protected:
 
     public:
+        Human(string name, int level, double max_h, double health, double damage, int speed, int defense, int agility, int accuracy, int sword_level);
+        ~Human();
+
         int get_sword_level(void) const;
         string get_label(void) const override;
         string get_race(void) const override;
         Item get_weapon(void) const override;
-        void print_info(void) const override;
 
         void set_sword_level(int new_sword_level);
+
+        void print_info(void) const override;
 };
 
 class Dwarf : public PlayerEntity {
@@ -70,13 +72,17 @@ class Dwarf : public PlayerEntity {
     //int axe_level;
 
     public:
+        Dwarf(string name, int level, double max_h, double health, double damage, int speed, int defense, int agility, int accuracy, int axe_level);
+        ~Dwarf();
+
         int get_axe_level(void) const;
         string get_label(void) const override;
         string get_race(void) const override;
         Item get_weapon(void) const override;
-        void print_info(void) const override;
 
         void set_axe_level(int new_axe_level);
+
+        void print_info(void) const override;
 };
 
 class Elf : public PlayerEntity {
@@ -88,14 +94,18 @@ class Elf : public PlayerEntity {
     protected:
 
     public:
+        Elf(string name, int level, double max_h, double health, double damage, int speed, int defense, int agility, int accuracy, int bow_level, int range);
+        ~Elf();
+
         int get_bow_level(void) const;
         int get_range(void) const;
         string get_label(void) const override;
         string get_race(void) const override;
         Item get_weapon(void) const override;
-        void print_info(void) const override;
 
         void set_bow_level(int new_bow_level);
+
+        void print_info(void) const override;
 };
 
 #endif

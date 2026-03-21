@@ -7,10 +7,12 @@ using namespace std;
 
 class Entity {
     private:
+        static int _id_inc;
         const int _entity_id;
 
     protected:
-        Entity();
+        Entity(double max_h, double health, double damage, int speed);
+        Entity(double health, double damage, int speed);
         ~Entity();
 
         int speed;
