@@ -23,6 +23,7 @@ class Entity {
         int get_damage(void) const;
         int get_max_health(void) const;
         int get_health(void) const;
+        virtual Item get_weapon(void) const;
 
         void set_speed(int new_val);
         void set_damage(double new_val);
@@ -30,7 +31,7 @@ class Entity {
         void set_health(double new_val);
 
         bool is_alive(void) const;
-        void print_stats(void) const;
+        virtual void print_info(void) const;
 };
 
 #endif

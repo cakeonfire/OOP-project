@@ -4,6 +4,8 @@
 #include <string>
 
 enum Item {
+    unknown,
+    none,
     sword,
     axe,
     bow,
