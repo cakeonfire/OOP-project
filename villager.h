@@ -10,7 +10,7 @@ class Villager : public PassiveEntity {
     protected:
 
     public:
-        string get_race(void) const override;
+        string get_species(void) const override;
         Item get_weapon(void) const override;
         void print_info(void) const override;
 };

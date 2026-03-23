@@ -13,7 +13,7 @@ class HostileEntity : public Entity {
     public:
         virtual bool is_undead(void) const;
         int get_follow_range(void) const;
-        string get_race(void) const override;
+        string get_species(void) const override;
         Item get_weapon(void) const override;
         void print_info(void) const override;
 };
@@ -28,7 +28,7 @@ class Zombie : public HostileEntity {
 
     public:
         float get_infection_chance(void) const;
-        string get_race(void) const override;
+        string get_species(void) const override;
         bool is_undead(void) const override;
         Item get_weapon(void) const override;
         void print_info(void) const override;
@@ -44,7 +44,7 @@ class Skeleton : public HostileEntity {
     protected:
 
     public:
-        string get_race(void) const override;
+        string get_species(void) const override;
         bool is_undead(void) const override;
         Item get_weapon(void) const override;
         void print_info(void) const override;
@@ -62,7 +62,7 @@ class Slime : public HostileEntity {
     public:
         bool can_split(void);  // whether has sufficient size to split
         int split_count(void);  // into how many smaller slimes will split
-        string get_race(void) const override;
+        string get_species(void) const override;
         bool is_undead(void) const override;
         Item get_weapon(void) const override;
         void print_info(void) const override;

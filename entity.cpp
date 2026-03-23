@@ -18,7 +18,7 @@ int Entity::get_max_health(void) const { return max_health; };
 int Entity::get_health(void) const { return health; };
 int Entity::get_damage(void) const { return damage; };
 int Entity::get_speed(void) const { return speed; };
-string Entity::get_race(void) const { return "UNKNOWN"; };
+string Entity::get_species(void) const { return "UNKNOWN"; };
 Item Entity::get_weapon(void) const { return Item::unknown; };
 
 void Entity::set_speed(int new_speed) { this->speed = max(0, new_speed); };

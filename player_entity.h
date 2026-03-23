@@ -28,7 +28,7 @@ class PlayerEntity : public Entity {
         int get_defense(void) const;
         int get_agility(void) const;
         int get_accuracy(void) const;
-        string get_race(void) const override;
+        string get_species(void) const override;
         Item get_weapon(void) const override;
 
         void set_name(string new_name);
@@ -54,7 +54,7 @@ class Human : public PlayerEntity {
 
         int get_sword_level(void) const;
         string get_label(void) const override;
-        string get_race(void) const override;
+        string get_species(void) const override;
         Item get_weapon(void) const override;
 
         void set_sword_level(int new_sword_level);
@@ -77,7 +77,7 @@ class Dwarf : public PlayerEntity {
 
         int get_axe_level(void) const;
         string get_label(void) const override;
-        string get_race(void) const override;
+        string get_species(void) const override;
         Item get_weapon(void) const override;
 
         void set_axe_level(int new_axe_level);
@@ -100,7 +100,7 @@ class Elf : public PlayerEntity {
         int get_bow_level(void) const;
         int get_range(void) const;
         string get_label(void) const override;
-        string get_race(void) const override;
+        string get_species(void) const override;
         Item get_weapon(void) const override;
 
         void set_bow_level(int new_bow_level);
