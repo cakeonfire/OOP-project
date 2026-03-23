@@ -2,14 +2,22 @@
 #include <fstream>
 #include <vector>
 
-#include "entity.h"
+#include "systree.h"
 
+using namespace std;
 
 
 int main(void) {
-    vector<Entity> entity_vec;
+    //cout << "test" << "\n";
 
-    //entity_vec.push_back(Entity(100.0, 10.0, 2)));
+    TreeNode* root = tree_new_node(nullptr, "root");
+    tree_print(root, 0);
+
+    TreeNode* child1 = tree_new_node(root, "1");
+    TreeNode* child2 = tree_new_node(root, "2");
+    tree_print(root, 0);
+
+    tree_free(&root);
 
     return 0;
 }
