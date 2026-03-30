@@ -10,14 +10,21 @@ using namespace std;
 int main(void) {
     //cout << "test" << "\n";
 
-    TreeNode* root = tree_new_node(nullptr, "root");
-    tree_print(root, 0);
+    TreeNode* entity = tree_new_node(nullptr, "Entity");
 
-    TreeNode* child1 = tree_new_node(root, "1");
-    TreeNode* child2 = tree_new_node(root, "2");
-    tree_print(root, 0);
+    TreeNode* player_entity = tree_new_node(entity, "PlayerEntity");
+    TreeNode* hostile_entity = tree_new_node(entity, "HostileEntity");
+    TreeNode* passive_entity = tree_new_node(entity, "PassiveEntity");
 
-    tree_free(&root);
+    TreeNode* human = tree_new_node(player_entity, "Human");
+    TreeNode* elf = tree_new_node(player_entity, "Elf");
+    TreeNode* dwarf = tree_new_node(player_entity, "Dwarf");
+
+    TreeNode* zombie = tree_new_node(hostile_entity, "Zombie");
+    TreeNode* skeleton = tree_new_node(hostile_entity, "Skeleton");
+    TreeNode* slime = tree_new_node(hostile_entity, "Slime");
+
+    tree_free(&entity);
 
     return 0;
 }
