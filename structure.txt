@@ -1,0 +1,12 @@
+Entity
+    PlayerEntity
+        Human
+        Elf
+        Dwarf
+    HostileEntity
+        Slime
+        Undead
+            Zombie
+            Skeleton
+
+note: to match gdrive projects, one more leaf could be removed (e.g. one of undead - zombie/skeleton)
