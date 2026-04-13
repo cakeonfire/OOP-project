@@ -18,10 +18,21 @@ class HostileEntity : public Entity {
         void print_info(void) const override;
 };
 
-// Hostile entities
-class Zombie : public HostileEntity {
+
+class Undead : public HostileEntity {
     private:
         static constexpr bool undead = true;
+    protected:
+
+    public:
+        bool is_undead(void) const override;
+
+};
+
+
+// Hostile entities
+class Zombie : public Undead {
+    private:
         float infection_chance;
 
     protected:
@@ -29,23 +40,20 @@ class Zombie : public HostileEntity {
     public:
         float get_infection_chance(void) const;
         string get_species(void) const override;
-        bool is_undead(void) const override;
         Item get_weapon(void) const override;
         void print_info(void) const override;
 
         void set_infection_chance(float new_inf_chance);
 };
 
-class Skeleton : public HostileEntity {
+class Skeleton : public Undead {
     private:
-        static constexpr bool undead = true;
         int range;
 
     protected:
 
     public:
         string get_species(void) const override;
-        bool is_undead(void) const override;
         Item get_weapon(void) const override;
         void print_info(void) const override;
 };
