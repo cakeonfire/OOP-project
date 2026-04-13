@@ -17,7 +17,6 @@ int PlayerEntity::get_defense(void) const { return defense; }
 int PlayerEntity::get_agility(void) const { return agility; }
 int PlayerEntity::get_accuracy(void) const { return accuracy; }
 string PlayerEntity::get_species(void) const { return "UNKNOWN"; }
-Item PlayerEntity::get_weapon(void) const { return Item::unknown; }
 
 void PlayerEntity::set_name(string new_name) { this->name = new_name; }
 void PlayerEntity::set_level(int new_level) { this->level = max(0, new_level); }
@@ -37,7 +36,6 @@ Human::~Human() {}
 int Human::get_sword_level(void) const { return sword_level; }
 string Human::get_label(void) const {  }
 string Human::get_species(void) const { return "Human"; }
-Item Human::get_weapon(void) const { return Human::weapon; }
 
 void Human::set_sword_level(int new_sword_level) { this->sword_level = max(0, new_sword_level); }
 
@@ -52,7 +50,6 @@ Dwarf::~Dwarf() {}
 int Dwarf::get_axe_level(void) const { return axe_level; }
 string Dwarf::get_label(void) const {  }
 string Dwarf::get_species(void) const { return "Dwarf"; }
-Item Dwarf::get_weapon(void) const { return Dwarf::weapon; }
 
 void Dwarf::set_axe_level(int new_axe_level) { this->axe_level = max(0, new_axe_level); }
 
@@ -68,7 +65,6 @@ int Elf::get_bow_level(void) const { return bow_level; }
 int Elf::get_range(void) const { return range; }
 string Elf::get_label(void) const {  }
 string Elf::get_species(void) const { return "Elf"; }
-Item Elf::get_weapon(void) const { return Elf::weapon; }
 
 void Elf::set_bow_level(int new_bow_level) { this->bow_level = max(0, new_bow_level); }
 

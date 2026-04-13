@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "entity.h"
-#include "items.h"
 
 using namespace std;
 
@@ -19,7 +18,6 @@ int Entity::get_health(void) const { return health; };
 int Entity::get_damage(void) const { return damage; };
 int Entity::get_speed(void) const { return speed; };
 string Entity::get_species(void) const { return "UNKNOWN"; };
-Item Entity::get_weapon(void) const { return Item::unknown; };
 
 void Entity::set_speed(int new_speed) { this->speed = max(0, new_speed); };
 void Entity::set_damage(double new_dmg) { this->damage = max(0.1, new_dmg); };

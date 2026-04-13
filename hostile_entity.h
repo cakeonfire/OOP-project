@@ -2,7 +2,6 @@
 #define _HOSTILE_H_
 
 #include "entity.h"
-#include "items.h"
 
 class HostileEntity : public Entity {
     private:
@@ -14,7 +13,6 @@ class HostileEntity : public Entity {
         virtual bool is_undead(void) const;
         int get_follow_range(void) const;
         string get_species(void) const override;
-        Item get_weapon(void) const override;
         void print_info(void) const override;
 };
 
@@ -40,7 +38,6 @@ class Zombie : public Undead {
     public:
         float get_infection_chance(void) const;
         string get_species(void) const override;
-        Item get_weapon(void) const override;
         void print_info(void) const override;
 
         void set_infection_chance(float new_inf_chance);
@@ -54,7 +51,6 @@ class Skeleton : public Undead {
 
     public:
         string get_species(void) const override;
-        Item get_weapon(void) const override;
         void print_info(void) const override;
 };
 
@@ -72,7 +68,6 @@ class Slime : public HostileEntity {
         int split_count(void);  // into how many smaller slimes will split
         string get_species(void) const override;
         bool is_undead(void) const override;
-        Item get_weapon(void) const override;
         void print_info(void) const override;
 
         enum SlimeSize {

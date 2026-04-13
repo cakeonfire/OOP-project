@@ -2,11 +2,9 @@
 #define _PLAYER_H_
 
 #include "entity.h"
-#include "items.h"
 
 class PlayerEntity : public Entity {
-    // inventory - realistically should have 2 slots - weapon / armor + access function for each of them (also switch func???)
-    // weapon / armor (should point - store index - to an item in inventory)
+    // NOTE redistribute stats (defense, agility, accuracy) for specific subclasses, also allows to get rid of weapon levels
     // additional stats: agility, accuracy, defense
     // subclasses should implement special stat variations
 
@@ -29,7 +27,6 @@ class PlayerEntity : public Entity {
         int get_agility(void) const;
         int get_accuracy(void) const;
         string get_species(void) const override;
-        Item get_weapon(void) const override;
 
         void set_name(string new_name);
         void set_level(int new_level);
@@ -43,7 +40,6 @@ class PlayerEntity : public Entity {
 // Player entities
 class Human : public PlayerEntity {
     private:
-        static constexpr Item weapon = Item::sword;
         int sword_level;
 
     protected:
@@ -55,7 +51,6 @@ class Human : public PlayerEntity {
         int get_sword_level(void) const;
         string get_label(void) const override;
         string get_species(void) const override;
-        Item get_weapon(void) const override;
 
         void set_sword_level(int new_sword_level);
 
@@ -64,7 +59,6 @@ class Human : public PlayerEntity {
 
 class Dwarf : public PlayerEntity {
     private:
-        static constexpr Item weapon = Item::axe;
         int axe_level;
 
     protected:
@@ -78,7 +72,6 @@ class Dwarf : public PlayerEntity {
         int get_axe_level(void) const;
         string get_label(void) const override;
         string get_species(void) const override;
-        Item get_weapon(void) const override;
 
         void set_axe_level(int new_axe_level);
 
@@ -87,7 +80,6 @@ class Dwarf : public PlayerEntity {
 
 class Elf : public PlayerEntity {
     private:
-        static constexpr Item weapon = Item::bow;
         int bow_level;
         int range;
 
@@ -101,7 +93,6 @@ class Elf : public PlayerEntity {
         int get_range(void) const;
         string get_label(void) const override;
         string get_species(void) const override;
-        Item get_weapon(void) const override;
 
         void set_bow_level(int new_bow_level);
 
