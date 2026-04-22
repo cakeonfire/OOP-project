@@ -4,17 +4,19 @@
 #include "entity.h"
 
 class HostileEntity : public Entity {
-    private:
-
     protected:
         int follow_range;
 
     public:
+        HostileEntity(std::string name, double max_h, double health, double damage, int follow_range);
+        HostileEntity(std::string name, double health, double damage, int follow_range);
+        ~HostileEntity();
+
         int get_follow_range(void) const;
         void set_follow_range(int new_frng);
         virtual bool is_undead(void) const;  // false by default
 
-        string get_species(void) const override;
+        std::string get_species(void) const override;
         void print_info(void) const override;
 };
 
@@ -23,9 +25,11 @@ class Undead : public HostileEntity {
     private:
         static constexpr bool undead = true;
 
-    protected:
-
     public:
+        Undead(std::string name, double max_h, double health, double damage, int follow_range);
+        Undead(std::string name, double health, double damage, int follow_range);
+        ~Undead();
+
         bool is_undead(void) const override;
 };
 
@@ -35,27 +39,31 @@ class Zombie : public Undead {
     private:
         float infection_chance;
 
-    protected:
-
     public:
+        Zombie(std::string name, double max_h, double health, double damage, int follow_range, float infection_chance);
+        Zombie(std::string name, double health, double damage, int follow_range, float infection_chance);
+        ~Zombie();
+
         float get_infection_chance(void) const;
         void set_infection_chance(float new_inf_chance);
 
-        string get_species(void) const override;
+        std::string get_species(void) const override;
         void print_info(void) const override;
 };
 
 class Skeleton : public Undead {
     private:
-        int range;
-
-    protected:
+        int bow_range;
 
     public:
-        int get_range(void) const;
-        void set_range(int new_range);
+        Skeleton(std::string name, double health, double damage, int follow_range, int bow_range);
+        Skeleton(std::string name, double max_h, double health, double damage, int follow_range, int bow_range);
+        ~Skeleton();
 
-        string get_species(void) const override;
+        int get_bow_range(void) const;
+        void set_bow_range(int new_bow_range);
+
+        std::string get_species(void) const override;
         void print_info(void) const override;
 };
 
@@ -63,18 +71,16 @@ class Slime : public HostileEntity {
     enum SlimeSize;
 
     private:
-    // this might not need to be there as by default HostileEntity will be made non-undead
-        static constexpr bool undead = false;
-        SlimeSize size;  // sizes from 3 - 1, if 1, can no longer split
-
-    protected:
+        SlimeSize size;  // sizes from 3 - 1; if 1, can no longer split
 
     public:
+        Slime(std::string name, double max_h, double health, double damage, int follow_range, int bow_range);
+
         bool can_split(void);  // whether has sufficient size to split
         int split_count(void);  // into how many smaller slimes will split
         bool is_undead(void) const override;
 
-        string get_species(void) const override;
+        std::string get_species(void) const override;
         void print_info(void) const override;
 
         enum SlimeSize {

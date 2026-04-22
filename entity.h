@@ -2,15 +2,14 @@
 #define _ENTITY_H_
 
 #include <string>
-using namespace std;
 
 class Entity {
     private:
-        string name;
+        std::string name;
 
     protected:
-        Entity(string& name, double max_h, double health, double damage);
-        Entity(string& name, double health, double damage);
+        Entity(std::string name, double max_h, double health, double damage);
+        Entity(std::string name, double health, double damage);
         ~Entity();
 
         double damage;
@@ -18,7 +17,7 @@ class Entity {
         double health;
 
     public:
-        const string& get_name(void) const;
+        const std::string& get_name(void) const;
         int get_damage(void) const;
         int get_max_health(void) const;
         int get_health(void) const;
@@ -29,8 +28,8 @@ class Entity {
 
         bool is_alive(void) const;
 
-        virtual string get_species(void) const;
-        string get_label(void) const;  // label of name + species (potentially sth more), not virtual -> just use get_species
+        virtual std::string get_species(void) const;
+        std::string get_label(void) const;  // label of name + species (potentially sth more), not virtual -> just use get_species
         virtual void print_info(void) const;
 };
 
