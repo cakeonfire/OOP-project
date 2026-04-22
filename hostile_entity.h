@@ -10,8 +10,10 @@ class HostileEntity : public Entity {
         int follow_range;
 
     public:
-        virtual bool is_undead(void) const;
         int get_follow_range(void) const;
+        void set_follow_range(int new_frng);
+        virtual bool is_undead(void) const;  // false by default
+
         string get_species(void) const override;
         void print_info(void) const override;
 };
@@ -20,11 +22,11 @@ class HostileEntity : public Entity {
 class Undead : public HostileEntity {
     private:
         static constexpr bool undead = true;
+
     protected:
 
     public:
         bool is_undead(void) const override;
-
 };
 
 
@@ -37,10 +39,10 @@ class Zombie : public Undead {
 
     public:
         float get_infection_chance(void) const;
+        void set_infection_chance(float new_inf_chance);
+
         string get_species(void) const override;
         void print_info(void) const override;
-
-        void set_infection_chance(float new_inf_chance);
 };
 
 class Skeleton : public Undead {
@@ -50,6 +52,9 @@ class Skeleton : public Undead {
     protected:
 
     public:
+        int get_range(void) const;
+        void set_range(int new_range);
+
         string get_species(void) const override;
         void print_info(void) const override;
 };
@@ -58,6 +63,7 @@ class Slime : public HostileEntity {
     enum SlimeSize;
 
     private:
+    // this might not need to be there as by default HostileEntity will be made non-undead
         static constexpr bool undead = false;
         SlimeSize size;  // sizes from 3 - 1, if 1, can no longer split
 
@@ -66,8 +72,9 @@ class Slime : public HostileEntity {
     public:
         bool can_split(void);  // whether has sufficient size to split
         int split_count(void);  // into how many smaller slimes will split
-        string get_species(void) const override;
         bool is_undead(void) const override;
+
+        string get_species(void) const override;
         void print_info(void) const override;
 
         enum SlimeSize {
@@ -75,7 +82,6 @@ class Slime : public HostileEntity {
             medium,
             small
         };
-
 };
 
 #endif
