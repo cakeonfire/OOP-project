@@ -1,2 +1,1 @@
-- implement hostile_entity.cpp
 - refactor systree (change to normal tree naming) + add deconstructor, finish implementation and clean up

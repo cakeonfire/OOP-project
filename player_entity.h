@@ -10,11 +10,12 @@ class PlayerEntity : public Entity {
     protected:
         PlayerEntity(std::string name, double max_h, double health, double damage, int level);
         PlayerEntity(std::string name, double health, double damage, int level);
-        ~PlayerEntity();
 
         int level;
 
     public:
+        ~PlayerEntity();
+
         int get_level(void) const;
         void set_level(int new_level);
 

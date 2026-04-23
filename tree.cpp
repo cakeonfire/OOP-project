@@ -2,10 +2,24 @@
 #include <vector>
 #include <string>
 
-#include "systree.h"
+#include "tree.h"
 #include "entity.h"
 
 using namespace std;
+
+
+TreeNode::TreeNode(string name) : parent(nullptr), name(name) {}
+TreeNode::TreeNode(TreeNode* parent, string name) : parent(parent), name(name) {}
+TreeNode::~TreeNode() {
+    for (auto* child : this->children) {
+        delete child;
+    }
+
+// NOTE start here idk what else to do here
+    for (auto* e : this->entities) {
+        delete e;
+    }
+}
 
 
 TreeNode* tree_new_node(TreeNode* parent, string name) {

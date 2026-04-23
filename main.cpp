@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 
-#include "systree.h"
+#include "tree.h"
 
 using namespace std;
 

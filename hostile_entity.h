@@ -7,12 +7,13 @@ class HostileEntity : public Entity {
     protected:
         HostileEntity(std::string name, double max_h, double health, double damage, int aggression_range);
         HostileEntity(std::string name, double health, double damage, int aggression_range);
-        ~HostileEntity();
 
         int aggression_range;
         static constexpr bool undead = false;
 
     public:
+        ~HostileEntity();
+
         int get_aggression_range(void) const;
         void set_aggression_range(int new_aggr_range);
         virtual bool is_undead(void) const;  // false by default

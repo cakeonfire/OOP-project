@@ -10,13 +10,14 @@ class Entity {
     protected:
         Entity(std::string name, double max_h, double health, double damage);
         Entity(std::string name, double health, double damage);
-        ~Entity();
 
         double damage;
         double max_health;
         double health;
 
     public:
+        ~Entity();
+
         const std::string& get_name(void) const;
         int get_damage(void) const;
         int get_max_health(void) const;
