@@ -5,15 +5,16 @@
 
 class HostileEntity : public Entity {
     protected:
-        int follow_range;
-
-    public:
-        HostileEntity(std::string name, double max_h, double health, double damage, int follow_range);
-        HostileEntity(std::string name, double health, double damage, int follow_range);
+        HostileEntity(std::string name, double max_h, double health, double damage, int aggression_range);
+        HostileEntity(std::string name, double health, double damage, int aggression_range);
         ~HostileEntity();
 
-        int get_follow_range(void) const;
-        void set_follow_range(int new_frng);
+        int aggression_range;
+        static constexpr bool undead = false;
+
+    public:
+        int get_aggression_range(void) const;
+        void set_aggression_range(int new_aggr_range);
         virtual bool is_undead(void) const;  // false by default
 
         std::string get_species(void) const override;
@@ -26,11 +27,14 @@ class Undead : public HostileEntity {
         static constexpr bool undead = true;
 
     public:
-        Undead(std::string name, double max_h, double health, double damage, int follow_range);
-        Undead(std::string name, double health, double damage, int follow_range);
+        Undead(std::string name, double max_h, double health, double damage, int aggression_range);
+        Undead(std::string name, double health, double damage, int aggression_range);
         ~Undead();
 
         bool is_undead(void) const override;
+
+        std::string get_species(void) const override;
+        void print_info(void) const override;
 };
 
 
@@ -40,8 +44,8 @@ class Zombie : public Undead {
         float infection_chance;
 
     public:
-        Zombie(std::string name, double max_h, double health, double damage, int follow_range, float infection_chance);
-        Zombie(std::string name, double health, double damage, int follow_range, float infection_chance);
+        Zombie(std::string name, double max_h, double health, double damage, int aggression_range, float infection_chance);
+        Zombie(std::string name, double health, double damage, int aggression_range, float infection_chance);
         ~Zombie();
 
         float get_infection_chance(void) const;
@@ -56,8 +60,8 @@ class Skeleton : public Undead {
         int bow_range;
 
     public:
-        Skeleton(std::string name, double health, double damage, int follow_range, int bow_range);
-        Skeleton(std::string name, double max_h, double health, double damage, int follow_range, int bow_range);
+        Skeleton(std::string name, double max_h, double health, double damage, int aggression_range, int bow_range);
+        Skeleton(std::string name, double health, double damage, int aggression_range, int bow_range);
         ~Skeleton();
 
         int get_bow_range(void) const;
@@ -74,19 +78,23 @@ class Slime : public HostileEntity {
         SlimeSize size;  // sizes from 3 - 1; if 1, can no longer split
 
     public:
-        Slime(std::string name, double max_h, double health, double damage, int follow_range, int bow_range);
+        Slime(std::string name, double max_h, double health, double damage, int aggression_range, Slime::SlimeSize size);
+        Slime(std::string name, double health, double damage, int aggression_range, Slime::SlimeSize size);
+        ~Slime();
+
+        Slime::SlimeSize get_size(void) const;
+        void set_size(Slime::SlimeSize new_size);
 
         bool can_split(void);  // whether has sufficient size to split
         int split_count(void);  // into how many smaller slimes will split
-        bool is_undead(void) const override;
 
         std::string get_species(void) const override;
         void print_info(void) const override;
 
         enum SlimeSize {
-            large,
+            small,
             medium,
-            small
+            large
         };
 };
 
