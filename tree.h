@@ -18,6 +18,7 @@ struct TreeNode {
     TreeNode(TreeNode* parent, std::string name);
     ~TreeNode();
 
+    TreeNode* add_node(std::string name);
     TreeNode* get_child(std::string name);
     void print(void);
 

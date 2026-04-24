@@ -12,9 +12,9 @@ HostileEntity::HostileEntity(string name, double max_h, double health, double da
 HostileEntity::HostileEntity(string name, double health, double damage, int aggression_range) : Entity(name, health, damage), aggression_range(aggression_range) {}
 HostileEntity::~HostileEntity() {}
 
-int HostileEntity::get_aggression_range(void) const { this->aggression_range; }
+int HostileEntity::get_aggression_range(void) const { return this->aggression_range; }
 void HostileEntity::set_aggression_range(int new_aggr_range) { this->aggression_range = max(0, new_aggr_range); }
-bool HostileEntity::is_undead(void) const { this->undead; }
+bool HostileEntity::is_undead(void) const { return this->undead; }
 
 string HostileEntity::get_species(void) const { return "HostileEntity"; };
 void HostileEntity::print_info(void) const {  }  // TODO
@@ -75,6 +75,7 @@ int Slime::split_count(void) {
         case Slime::SlimeSize::medium: return 3;
         case Slime::SlimeSize::large: return 2;
     }
+    return -1;
 }
 
 string Slime::get_species(void) const { return "Slime"; }

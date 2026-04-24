@@ -8,17 +8,46 @@
 using namespace std;
 
 
+TreeNode::TreeNode() {}
 TreeNode::TreeNode(string name) : parent(nullptr), name(name) {}
-TreeNode::TreeNode(TreeNode* parent, string name) : parent(parent), name(name) {}
+TreeNode::TreeNode(TreeNode* parent, string name) : parent(parent), name(name) {
+    if (parent != nullptr) this->parent->children.push_back(this);
+}
 TreeNode::~TreeNode() {
     for (auto* child : this->children) {
         delete child;
     }
 
-// NOTE start here idk what else to do here
     for (auto* e : this->entities) {
         delete e;
     }
+
+    cout << "del: " << this->name << "\n";
+}
+
+TreeNode* TreeNode::add_node(std::string name) {
+    TreeNode* new_node = new TreeNode(this, name);
+    return new_node;
+}
+
+TreeNode* TreeNode::get_child(string name) {
+    for (auto* child : this->children) {
+        if (child->name == name) return child;
+    }
+    return nullptr;  // no such child node
+}
+
+void TreeNode::_rec_print(int lvl) {
+    for (int i=0; i<lvl; i++) cout << "    ";
+    cout << this->name << "\n";
+
+    for (auto* child : this->children) {
+        child->_rec_print(lvl+1);
+    }
+}
+
+void TreeNode::print() {
+    this->_rec_print(0);
 }
 
 

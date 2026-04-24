@@ -73,10 +73,15 @@ class Skeleton : public Undead {
 };
 
 class Slime : public HostileEntity {
-    enum SlimeSize;
+    public:
+        enum SlimeSize {
+            small,
+            medium,
+            large
+        };
 
     private:
-        SlimeSize size;  // sizes from 3 - 1; if 1, can no longer split
+        Slime::SlimeSize size;  // sizes from 3 - 1; if 1, can no longer split
 
     public:
         Slime(std::string name, double max_h, double health, double damage, int aggression_range, Slime::SlimeSize size);
@@ -91,12 +96,6 @@ class Slime : public HostileEntity {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
-
-        enum SlimeSize {
-            small,
-            medium,
-            large
-        };
 };
 
 #endif
