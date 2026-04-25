@@ -8,7 +8,31 @@
 using namespace std;
 
 
-TreeNode::TreeNode() {}
+// TREE
+Tree::Tree() : root(nullptr) {}
+Tree::Tree(TreeNode* root_node) : root(root_node) {}
+Tree::Tree(string root_name) {
+    TreeNode* root_node = new TreeNode(root_name);
+    this->root = root_node;
+}
+Tree::~Tree() { delete this->root; }
+
+TreeNode* Tree::add_node(std::string parent_name, std::string node_name) {
+    TreeNode* parent = this->root->find_node_deep(parent_name);
+    if (parent == nullptr) {  // could not find such parent node, aborting process
+        return nullptr;
+    }
+    TreeNode* new_node = new TreeNode(parent, node_name);
+    return new_node;
+}
+
+void Tree::print(void) {
+    this->root->print();
+}
+
+
+// TREENODE
+//TreeNode::TreeNode() {}
 TreeNode::TreeNode(string name) : parent(nullptr), name(name) {}
 TreeNode::TreeNode(TreeNode* parent, string name) : parent(parent), name(name) {
     if (parent != nullptr) this->parent->children.push_back(this);
@@ -30,11 +54,22 @@ TreeNode* TreeNode::add_node(std::string name) {
     return new_node;
 }
 
-TreeNode* TreeNode::get_child(string name) {
+TreeNode* TreeNode::find_node_shallow(const string& name) {
     for (auto* child : this->children) {
         if (child->name == name) return child;
     }
     return nullptr;  // no such child node
+}
+
+TreeNode* TreeNode::find_node_deep(const string& name) {
+    if (this->name == name) return this;
+
+    TreeNode* res;
+    for (auto* tnode : this->children) {
+        res = tnode->find_node_deep(name);
+        if (res != nullptr) return tnode;
+    }
+    return nullptr;  // such node in this part of the tree does not exist
 }
 
 void TreeNode::_rec_print(int lvl) {
