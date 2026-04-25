@@ -22,7 +22,7 @@ TreeNode::~TreeNode() {
         delete e;
     }
 
-    cout << "del: " << this->name << "\n";
+    //cout << "del: " << this->name << "\n";
 }
 
 TreeNode* TreeNode::add_node(std::string name) {
@@ -51,6 +51,7 @@ void TreeNode::print() {
 }
 
 
+/*
 TreeNode* tree_new_node(TreeNode* parent, string name) {
     TreeNode* new_tnode = new TreeNode;
     new_tnode->name = name;
@@ -101,3 +102,4 @@ void tree_free(TreeNode** tnode) {
     _inter_rec_free(*tnode);
     *tnode = nullptr;
 }
+*/

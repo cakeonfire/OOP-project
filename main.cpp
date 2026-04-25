@@ -3,29 +3,12 @@
 #include <vector>
 
 #include "tree.h"
+#include "cmdapp.h"
 
 using namespace std;
 
 
-int main(void) {
-    //cout << "test" << "\n";
-
-    //TreeNode* entity = tree_new_node(nullptr, "Entity");
-
-    //TreeNode* player_entity = tree_new_node(entity, "PlayerEntity");
-    //TreeNode* hostile_entity = tree_new_node(entity, "HostileEntity");
-    //TreeNode* passive_entity = tree_new_node(entity, "PassiveEntity");
-
-    //TreeNode* human = tree_new_node(player_entity, "Human");
-    //TreeNode* elf = tree_new_node(player_entity, "Elf");
-    //TreeNode* dwarf = tree_new_node(player_entity, "Dwarf");
-
-    //TreeNode* zombie = tree_new_node(hostile_entity, "Zombie");
-    //TreeNode* skeleton = tree_new_node(hostile_entity, "Skeleton");
-    //TreeNode* slime = tree_new_node(hostile_entity, "Slime");
-
-    //tree_free(&entity);
-
+TreeNode* build_class_hierarchy() {
     TreeNode* entity = new TreeNode("Entity");
     TreeNode* player_entity = entity->add_node("PlayerEntity");
     TreeNode* hostile_entity = entity->add_node("HostileEntity");
@@ -39,9 +22,16 @@ int main(void) {
     undead->add_node("Zombie");
     undead->add_node("Skeleton");
 
-    entity->print();
+    return entity;
+}
 
-    delete entity;
+
+int main(void) {
+    //TreeNode* entity = build_class_hierarchy();
+    //entity->print();
+    //delete entity;
+
+    cmd_loop();
 
     return 0;
 }
