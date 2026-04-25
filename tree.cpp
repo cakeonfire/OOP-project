@@ -17,7 +17,19 @@ Tree::Tree(string root_name) {
 }
 Tree::~Tree() { delete this->root; }
 
-TreeNode* Tree::add_node(std::string parent_name, std::string node_name) {
+TreeNode* Tree::add_node(string node_name) {
+    TreeNode* new_node = new TreeNode(node_name);  // add at top, new root
+
+    if (this->root != nullptr) {
+        this->root->parent = new_node;
+        new_node->children.push_back(root);
+    }
+    this->root = new_node;
+
+    return new_node;
+}
+
+TreeNode* Tree::add_node(string parent_name, string node_name) {
     TreeNode* parent = this->root->find_node_deep(parent_name);
     if (parent == nullptr) {  // could not find such parent node, aborting process
         return nullptr;
@@ -46,10 +58,10 @@ TreeNode::~TreeNode() {
         delete e;
     }
 
-    //cout << "del: " << this->name << "\n";
+    cout << "del: " << this->name << "\n";
 }
 
-TreeNode* TreeNode::add_node(std::string name) {
+TreeNode* TreeNode::add_node(string name) {
     TreeNode* new_node = new TreeNode(this, name);
     return new_node;
 }
@@ -67,7 +79,7 @@ TreeNode* TreeNode::find_node_deep(const string& name) {
     TreeNode* res;
     for (auto* tnode : this->children) {
         res = tnode->find_node_deep(name);
-        if (res != nullptr) return tnode;
+        if (res != nullptr) return res;
     }
     return nullptr;  // such node in this part of the tree does not exist
 }
@@ -84,57 +96,3 @@ void TreeNode::_rec_print(int lvl) {
 void TreeNode::print() {
     this->_rec_print(0);
 }
-
-
-/*
-TreeNode* tree_new_node(TreeNode* parent, string name) {
-    TreeNode* new_tnode = new TreeNode;
-    new_tnode->name = name;
-    new_tnode->parent = parent;
-
-    if (parent != nullptr) {
-        parent->children.push_back(new_tnode);
-    }
-
-    return new_tnode;
-}
-
-
-TreeNode* tree_get_child(TreeNode* parent, string name) {
-    for (int i=0; i<parent->children.size(); i++) {
-        if (parent->children[i]->name == name) return parent->children[i];
-    }
-    return nullptr;  // child with such name not found
-}
-
-
-void tree_print(TreeNode* tnode, int indent_level) {
-    //cout << "tp: " << tnode->name << "\n";
-    // might firstly sort indexes as: with not children, then nodes that have children
-
-    for (int i=0; i<indent_level; i++) cout << "    ";
-    cout << tnode->name << "\n";
-
-    //for (TreeNode* child : tnode->children) {
-    //    tree_print(child, indent_level+1);
-    //}
-
-    for (int i=0; i<tnode->children.size(); i++) {
-        tree_print(tnode->children[i], indent_level+1);
-    }
-}
-
-
-void _inter_rec_free(TreeNode* tnode) {
-    for (TreeNode* child : tnode->children) {
-        _inter_rec_free(child);
-    }
-    delete tnode;
-}
-
-
-void tree_free(TreeNode** tnode) {
-    _inter_rec_free(*tnode);
-    *tnode = nullptr;
-}
-*/

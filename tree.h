@@ -7,6 +7,9 @@
 #include "entity.h"
 
 
+struct TreeNode;
+
+
 struct Tree {
     TreeNode* root = nullptr;
 
@@ -15,6 +18,7 @@ struct Tree {
     Tree(std::string root_name);
     ~Tree();
 
+    TreeNode* add_node(std::string node_name);  // this node will be a new root
     TreeNode* add_node(std::string parent_name, std::string node_name);
     void print(void);
 };
@@ -39,10 +43,5 @@ struct TreeNode {
     private:
         void _rec_print(int lvl);
 };
-
-//TreeNode* tree_new_node(TreeNode* parent, std::string name);
-//TreeNode* tree_get_child(TreeNode* parent, std::string name);
-//void tree_print(TreeNode* tnode, int indent_level);
-//void tree_free(TreeNode** tnode);
 
 #endif

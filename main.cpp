@@ -8,30 +8,31 @@
 using namespace std;
 
 
-TreeNode* build_class_hierarchy() {
-    TreeNode* entity = new TreeNode("Entity");
-    TreeNode* player_entity = entity->add_node("PlayerEntity");
-    TreeNode* hostile_entity = entity->add_node("HostileEntity");
-    TreeNode* undead = hostile_entity->add_node("Undead");
+Tree* build_class_hierarchy() {
+    Tree* tree = new Tree();
+    tree->add_node("Entity");
+    tree->add_node("Entity", "PlayerEntity");
+    tree->add_node("Entity", "HostileEntity");
+    tree->add_node("HostileEntity", "Undead");
 
-    player_entity->add_node("Human");
-    player_entity->add_node("Dwarf");
-    player_entity->add_node("Elf");
+    tree->add_node("PlayerEntity", "Human");
+    tree->add_node("PlayerEntity", "Dwarf");
+    tree->add_node("PlayerEntity", "Elf");
 
-    hostile_entity->add_node("Slime");
-    undead->add_node("Zombie");
-    undead->add_node("Skeleton");
+    tree->add_node("HostileEntity", "Slime");
+    tree->add_node("Undead", "Zombie");
+    tree->add_node("Undead", "Skeleton");
 
-    return entity;
+    return tree;
 }
 
 
 int main(void) {
-    //TreeNode* entity = build_class_hierarchy();
-    //entity->print();
-    //delete entity;
+    Tree* class_tree = build_class_hierarchy();
+    class_tree->print();
 
-    cmd_loop();
+    cmdapp::cmd_loop(class_tree);
 
+    delete class_tree;
     return 0;
 }

@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "tree.h"
+
 
 enum CMD {
     CD,
@@ -29,7 +31,9 @@ enum CMD {
 CMD str_to_cmd(std::string str_cmd);
 std::string cmd_to_str(CMD cmd);
 
+namespace cmdapp {
 std::string load_cmd(std::vector<std::string>& args);
-void cmd_loop(void);
+void cmd_loop(Tree* tree);
+}
 
 #endif

@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "cmdapp.h"
+#include "tree.h"
 
 using namespace std;
 
@@ -36,6 +37,8 @@ std::string cmd_to_str(CMD cmd) {
     return "ERR";
 }
 
+namespace cmdapp {
+
 
 string load_cmd(vector<string>& cmd_args) {
     string dummy, cmd_str, arg;
@@ -53,7 +56,7 @@ string load_cmd(vector<string>& cmd_args) {
 }
 
 
-void cmd_loop(void) {
+void cmd_loop(Tree* tree) {
     bool running = true;
     string cmd_str;
     CMD cmd;
@@ -70,6 +73,22 @@ void cmd_loop(void) {
         cmd = str_to_cmd(cmd_str);
 
         switch (cmd) {
+            case CMD::CD:
+                break;
+            case CMD::MO:
+                break;
+            case CMD::DO:
+                break;
+            case CMD::MDO:
+                break;
+            case CMD::DIR:
+                break;
+            case CMD::SHOW:
+                break;
+            case CMD::SAVE:
+                break;
+            case CMD::READ:
+                break;
             case CMD::EXIT:
                 running = false;
                 break;
@@ -77,5 +96,7 @@ void cmd_loop(void) {
 
         cmd_args.clear();  // clear for the next command
     }
+
+}
 
 }
