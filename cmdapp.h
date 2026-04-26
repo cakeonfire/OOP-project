@@ -37,6 +37,7 @@ void cmd_loop(Tree* tree);
 
 bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args);
 void _exec_cmd_CD(std::vector<std::string>& cmd_args, Tree* tree, TreeNode** current_node);
+void _exec_cmd_MO(std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
 }
 
 #endif

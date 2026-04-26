@@ -44,6 +44,10 @@ bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
         if (cmd_args.size() == 1) return true;
         cout << "Invalid arguments for CD command: expected 1 argument: destination node\n";
 
+    } else if (cmd == CMD::MO) {
+        if (cmd_args.size() >= 0) return true;
+        cout << "Invalid arguments for MO command: expected at least 1 argument: object name\n";
+
     } else if (cmd == CMD::EXIT) {
         if (cmd_args.size() == 0) return true;
         cout << "Invalid arguments for EXIT command: expected 0 arguments\n";
@@ -64,6 +68,17 @@ void _exec_cmd_CD(vector<string>& cmd_args, Tree* tree, TreeNode** current_node)
     }
 
     *current_node = node_dest;
+}
+
+
+void _exec_cmd_MO(std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    if (!current_node->is_leaf()) {
+        cout << "Can add entities only to the leaf nodes\n";
+        return;
+    } else if (current_node->find_entity(cmd_args[0]) != nullptr) {  // check if entity of this name already exists
+        cout << "Entity with name \"" << cmd_args[0] << "\" already exists\n";
+        return;
+    }
 }
 
 

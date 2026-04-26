@@ -38,7 +38,12 @@ struct TreeNode {
     TreeNode* add_node(std::string name);
     TreeNode* find_node_shallow(const std::string& name);  // find immediate child node
     TreeNode* find_node_deep(const std::string& name);  // recursively find matching child node within subsequent structure
+    bool is_leaf(void);
     void print(void);
+
+    void add_entity(Entity* entity);
+    bool remove_entity(Entity* entity);  // returns whether the entity was successfully removed
+    Entity* find_entity(const std::string& name);
 
     private:
         void _rec_print(int lvl);

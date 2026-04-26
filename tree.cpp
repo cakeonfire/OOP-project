@@ -93,6 +93,35 @@ void TreeNode::_rec_print(int lvl) {
     }
 }
 
+bool TreeNode::is_leaf(void) {
+    return (this->entities.size() == 0);
+}
+
 void TreeNode::print() {
     this->_rec_print(0);
+}
+
+void TreeNode::add_entity(Entity* entity) {
+    this->entities.push_back(entity);
+}
+
+
+bool TreeNode::remove_entity(Entity* entity) {
+    int removed = 0;
+    for (auto it = this->entities.begin(); it != this->entities.end(); ) {
+        if (*it != entity) {
+            this->entities.erase(it);
+            removed++;
+        } else {
+            it++;
+        }
+    }
+    return (removed != 0);
+}
+
+Entity* TreeNode::find_entity(const std::string& name) {
+    for (auto* entity : this->entities) {
+        if (entity->get_name() == name) return entity;
+    }
+    return nullptr;  // entity with such name not found
 }
