@@ -36,8 +36,14 @@ std::string load_cmd(std::vector<std::string>& cmd_args);
 void cmd_loop(Tree* tree);
 
 bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args);
-void _exec_cmd_CD(std::vector<std::string>& cmd_args, Tree* tree, TreeNode** current_node);
-void _exec_cmd_MO(std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_CD(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode** current_node);
+void _exec_cmd_MO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_DO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_SHOW(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_READ(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
 }
 
 #endif

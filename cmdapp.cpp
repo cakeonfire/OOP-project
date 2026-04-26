@@ -48,21 +48,30 @@ bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
         cout << "Invalid arguments for CD command: expected 1 argument: destination node\n";
 
     } else if (cmd == CMD::MO) {
-        if (cmd_args.size() >= 0) return true;
-        cout << "Invalid arguments for MO command: expected at least 1 argument: object name\n";
+        if (cmd_args.size() >= 1) return true;
+        cout << "Invalid arguments for MO command: expected at least 1 argument: object name, arguments...\n";
+
+    } else if (cmd == CMD::DO) {
+        if (cmd_args.size() == 1) return true;
+        cout << "Invalid arguments for DO command: expected 1 argument: object name\n";
+
+    } else if (cmd == CMD::DIR) {
+        if (cmd_args.size() == 0) return true;
+        cout << "Invalid arguments for DIR command: expected 0 arguments\n";
 
     } else if (cmd == CMD::EXIT) {
         if (cmd_args.size() == 0) return true;
         cout << "Invalid arguments for EXIT command: expected 0 arguments\n";
 
+    } else {
+        cout << "Unregistered command in _validate_cmd_args: " << cmd_to_str(cmd) << "\n";
     }
 
-    cout << "Unregistered command in _validate_cmd_args: " << cmd_to_str(cmd) << "\n";
     return false;
 }
 
 
-void _exec_cmd_CD(vector<string>& cmd_args, Tree* tree, TreeNode** current_node) {
+void _exec_cmd_CD(const vector<string>& cmd_args, Tree* tree, TreeNode** current_node) {
     TreeNode* node_dest = tree->root->find_node_deep(cmd_args[0]);
 
     if (node_dest == nullptr) {
@@ -74,7 +83,7 @@ void _exec_cmd_CD(vector<string>& cmd_args, Tree* tree, TreeNode** current_node)
 }
 
 
-void _exec_cmd_MO(vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
+void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
     if (!current_node->is_leaf()) {
         cout << "Can add entities only to the leaf nodes\n";
         return;
@@ -138,12 +147,41 @@ void _exec_cmd_MO(vector<string>& cmd_args, Tree* tree, TreeNode* current_node) 
         else if (current_node->name == "Slime") entity = new Slime(name, health, damage, aggr_range, slime_size);
 
     } else {
-        cout << "Unknown leaf class: " << current_node->name << "\n";
+        cout << "Can add entities only for leaf nodes\n";
         return;
     }
 
     current_node->add_entity(entity);
 }
+
+
+void _exec_cmd_DO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    bool rm_status = current_node->remove_entity(current_node->find_entity(cmd_args[0]));
+    if (!rm_status) {
+        cout << "No entity to delete with name: \"" << cmd_args[0] << "\"\n";
+    }
+}
+
+
+void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
+
+
+void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    if (current_node->is_leaf() && current_node->entities.size() > 0) {
+        cout << current_node->name << ":\n";
+        for (auto* entity : current_node->entities) {
+            cout << "    " << entity->get_name() << "\n";
+        }
+        return;
+    }
+
+    for (auto* child : current_node->children) _exec_cmd_DIR(cmd_args, tree, child);
+}
+
+
+void _exec_cmd_SHOW(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
+void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
+void _exec_cmd_READ(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
 
 
 string load_cmd(vector<string>& cmd_args) {
@@ -195,18 +233,25 @@ void cmd_loop(Tree* tree) {
                 _exec_cmd_CD(cmd_args, tree, &node_ptr);
                 break;
             case CMD::MO:
+                _exec_cmd_MO(cmd_args, tree, node_ptr);
                 break;
             case CMD::DO:
+                _exec_cmd_DO(cmd_args, tree, node_ptr);
                 break;
             case CMD::MDO:
+                _exec_cmd_MDO(cmd_args, tree, node_ptr);
                 break;
             case CMD::DIR:
+                _exec_cmd_DIR(cmd_args, tree, node_ptr);
                 break;
             case CMD::SHOW:
+                _exec_cmd_SHOW(cmd_args, tree, node_ptr);
                 break;
             case CMD::SAVE:
+                _exec_cmd_SAVE(cmd_args, tree, node_ptr);
                 break;
             case CMD::READ:
+                _exec_cmd_READ(cmd_args, tree, node_ptr);
                 break;
             case CMD::EXIT:
                 running = false;

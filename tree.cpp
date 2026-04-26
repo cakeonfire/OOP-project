@@ -94,7 +94,7 @@ void TreeNode::_rec_print(int lvl) {
 }
 
 bool TreeNode::is_leaf(void) {
-    return (this->entities.size() == 0);
+    return (this->children.size() == 0);
 }
 
 void TreeNode::print() {
@@ -111,6 +111,7 @@ bool TreeNode::remove_entity(Entity* entity) {
     for (auto it = this->entities.begin(); it != this->entities.end(); ) {
         if (*it != entity) {
             this->entities.erase(it);
+            delete *it;
             removed++;
         } else {
             it++;

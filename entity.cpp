@@ -8,9 +8,10 @@
 using namespace std;
 
 Entity::Entity(string name, double max_h, double health, double damage) : name(name), max_health(max_h), health(health), damage(damage) {}
-Entity::Entity(string name, double health, double damage) : name(name), health(health), damage(damage) {}
+Entity::Entity(string name, double health, double damage) : name(name), max_health(health), health(health), damage(damage) {}
 Entity::~Entity() {}
 
+const std::string& Entity::get_name(void) const { return this->name; };
 int Entity::get_max_health(void) const { return max_health; };
 int Entity::get_health(void) const { return health; };
 int Entity::get_damage(void) const { return damage; };
