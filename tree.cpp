@@ -107,17 +107,26 @@ void TreeNode::add_entity(Entity* entity) {
 
 
 bool TreeNode::remove_entity(Entity* entity) {
-    int removed = 0;
-    for (auto it = this->entities.begin(); it != this->entities.end(); ) {
-        if (*it != entity) {
-            this->entities.erase(it);
-            delete *it;
-            removed++;
-        } else {
-            it++;
+    //int removed = 0;
+    //for (auto it = this->entities.begin(); it != this->entities.end(); ) {
+    //    if (*it != entity) {
+    //        this->entities.erase(it);
+    //        delete *it;
+    //        removed++;
+    //    } else {
+    //        it++;
+    //    }
+    //}
+    //return (removed != 0);
+
+    for (int i=0; i<this->entities.size(); i++) {
+        if (this->entities[i] == entity) {
+            this->entities.erase(this->entities.begin() + i);
+            return true;
         }
     }
-    return (removed != 0);
+    return false;
+
 }
 
 Entity* TreeNode::find_entity(const std::string& name) {

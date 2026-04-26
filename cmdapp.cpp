@@ -55,6 +55,10 @@ bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
         if (cmd_args.size() == 1) return true;
         cout << "Invalid arguments for DO command: expected 1 argument: object name\n";
 
+    } else if (cmd == CMD::MDO) {
+        if (cmd_args.size() >= 1) return true;
+        cout << "Invalid arguments for MDO command: expected 1 argument: object name\n";
+
     } else if (cmd == CMD::DIR) {
         if (cmd_args.size() == 0) return true;
         cout << "Invalid arguments for DIR command: expected 0 arguments\n";
@@ -85,7 +89,7 @@ void _exec_cmd_CD(const vector<string>& cmd_args, Tree* tree, TreeNode** current
 
 void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
     if (!current_node->is_leaf()) {
-        cout << "Can add entities only to the leaf nodes\n";
+        cout << "Can add entities only to leaf nodes\n";
         return;
     } else if (current_node->find_entity(cmd_args[0]) != nullptr) {  // check if entity with this name already exists
         cout << "Entity with name \"" << cmd_args[0] << "\" already exists\n";
@@ -100,7 +104,7 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
     float inf_chance;
     Slime::SlimeSize slime_size;
 
-    if (current_node->name == "Human" || current_node->name == "Dwarf" || current_node->name == "Elf") {
+    if (current_node->parent->name == "PlayerEntity") {
         try {
             if (cmd_args.size() != 5) throw invalid_argument("");
             health = stod(cmd_args[1]);
@@ -117,7 +121,7 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
         else if (current_node->name == "Dwarf") entity = new Dwarf(name, health, damage, level, player_e_stat);
         else if (current_node->name == "Elf") entity = new Elf(name, health, damage, level, player_e_stat);
 
-    } else if (current_node->name == "Zombie" || current_node->name == "Skeleton" || current_node->name == "Slime") {
+    } else if (current_node->parent->name == "HostileEntity") {
         try {
             if (cmd_args.size() != 5) throw invalid_argument("");
             health = stod(cmd_args[1]);
@@ -156,14 +160,149 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
 
 
 void _exec_cmd_DO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
-    bool rm_status = current_node->remove_entity(current_node->find_entity(cmd_args[0]));
+    Entity* entity = current_node->find_entity(cmd_args[0]);
+    bool rm_status = current_node->remove_entity(entity);
     if (!rm_status) {
         cout << "No entity to delete with name: \"" << cmd_args[0] << "\"\n";
     }
 }
 
 
-void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
+void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    if (!current_node->is_leaf()) {
+        cout << "This node has no entities\n";
+        return;
+    }
+    
+    string name = cmd_args[0];
+    Entity* entity = current_node->find_entity(name);
+    if (current_node->find_entity(name) == nullptr) {
+        cout << "Entity with name \"" << name << "\" does not exist\n";
+        return;
+    }
+
+    // edit prompt
+    cout << "Provide new argument list; Enter \".\" for arguments to NOT modify; Press 'Enter' to abort\n";
+    if (current_node->parent->name == "PlayerEntity") cout << "<name> <max_health> <health> <damage> <level> <strength/toughness/agility>\n";
+    else if (current_node->parent->name == "HostileEntity") cout << "<name> <max_health> <health> <damage> <aggression_range> <infection_chance/bow_range>\n";
+    else if (current_node->name == "Slime") cout << "<name> <max_health> <health> <damage> <aggression_range> <size:small|medium|large>\n";
+    cout << entity->get_name() << ": ";
+
+    // load new args
+    vector<string> new_args;
+    string line, arg;
+    getline(cin, line);
+    istringstream iss(line);
+    while (iss >> arg) new_args.push_back(arg);
+
+    if (new_args.size() != 6) {
+        cout << "Invalid argument amount\n";
+        return;
+    }
+
+    string new_name;
+    double max_health, health, damage;
+    int level, player_e_stat;
+    int aggr_range, bow_range;
+    float inf_chance;
+    Slime::SlimeSize slime_size;
+
+    // new name
+    if (new_args[0] != ".") new_name = new_args[0];
+
+    // new max_health
+    if (new_args[1] != ".") {
+        try {
+            max_health = stod(new_args[1]);
+        } catch (const invalid_argument& exc) {
+            cout << "Invalid max_health argument\n";
+            return;
+        }
+    }
+
+    // new health
+    if (new_args[2] != ".") {
+        try {
+            health = stod(new_args[2]);
+        } catch (const invalid_argument& exc) {
+            cout << "Invalid health argument\n";
+            return;
+        }
+    }
+
+    // new damage
+    if (new_args[3] != ".") {
+        try {
+            damage = stod(new_args[3]);
+        } catch (const invalid_argument& exc) {
+            cout << "Invalid damage argument\n";
+            return;
+        }
+    }
+
+    // new level/aggression range
+    if (new_args[4] != ".") {
+        try {
+            if (current_node->parent->name == "PlayerEntity") level = stoi(new_args[4]);
+            else if (current_node->parent->name == "HostileEntity") aggr_range = stoi(new_args[4]);
+
+        } catch (const invalid_argument& exc) {
+            if (current_node->parent->name == "PlayerEntity")
+                cout << "Invalid level argument\n";
+            else if (current_node->parent->name == "HostileEntity")
+                cout << "Invalid aggression_range argument\n";
+            return;
+        }
+    }
+
+    // new player_stat/infection_chance/slime_size
+    if (new_args[5] != ".") {
+        try {
+            if (current_node->parent->name == "PlayerEntity") player_e_stat = stoi(new_args[5]);
+            if (current_node->name == "Zombie") inf_chance = stof(new_args[5]);
+            if (current_node->name == "Skeleton") bow_range = stoi(new_args[5]);
+            else if (current_node->name == "Slime") {
+                if (cmd_args[5] == "small") slime_size = Slime::SlimeSize::small;
+                else if (cmd_args[5] == "medium") slime_size = Slime::SlimeSize::medium;
+                else if (cmd_args[5] == "large") slime_size = Slime::SlimeSize::large;
+                else throw invalid_argument("");
+            }
+
+        } catch (const invalid_argument& exc) {
+            if (current_node->name == "Slime") {
+                cout << "Invalid slime_size argument\n";
+            } else if (current_node->name == "Zombie") {
+                cout << "Invalid infection_chance argument\n";
+            } else if (current_node->name == "Skeleton") {
+                cout << "Invalid bow_range argument\n";
+            }
+            return;
+        }
+    }
+
+    // actually assign new values
+    if (new_args[0] != ".") entity->set_name(new_name);
+    if (new_args[1] != ".") {
+        entity->set_max_health(max_health);
+        entity->set_health(entity->get_health());  // to match new max_health limit; setter will limit by itself
+    }
+    if (new_args[2] != ".") entity->set_health(health);
+    if (new_args[3] != ".") entity->set_damage(damage);
+
+    if (new_args[4] != ".") {
+        if (current_node->parent->name == "PlayerEntity") dynamic_cast<PlayerEntity*>(entity)->set_level(level);
+        else if (current_node->parent->name == "HostileEntity") dynamic_cast<HostileEntity*>(entity)->set_aggression_range(aggr_range);
+    }
+
+    if (new_args[5] != ".") {
+        if (current_node->name == "Human") dynamic_cast<Human*>(entity)->set_strength(player_e_stat);
+        else if (current_node->name == "Dwarf") dynamic_cast<Dwarf*>(entity)->set_toughness(player_e_stat);
+        else if (current_node->name == "Elf") dynamic_cast<Elf*>(entity)->set_agility(player_e_stat);
+        else if (current_node->name == "Zombie") dynamic_cast<Zombie*>(entity)->set_infection_chance(inf_chance);
+        else if (current_node->name == "Skeleton") dynamic_cast<Skeleton*>(entity)->set_bow_range(bow_range);
+        else if (current_node->name == "Slime") dynamic_cast<Slime*>(entity)->set_size(slime_size);
+    }
+}
 
 
 void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {

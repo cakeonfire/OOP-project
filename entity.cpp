@@ -16,6 +16,7 @@ int Entity::get_max_health(void) const { return max_health; };
 int Entity::get_health(void) const { return health; };
 int Entity::get_damage(void) const { return damage; };
 
+void Entity::set_name(std::string new_name) { this->name = new_name; }
 void Entity::set_damage(double new_dmg) { this->damage = max(0.1, new_dmg); };
 void Entity::set_max_health(double new_max_h) { this->max_health = max(0.1, new_max_h); };
 void Entity::set_health(double new_health) { this->health = min(this->max_health, max(0.0, new_health)); };

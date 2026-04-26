@@ -23,6 +23,7 @@ class Entity {
         int get_max_health(void) const;
         int get_health(void) const;
 
+        void set_name(std::string new_name);
         void set_damage(double new_dmg);
         void set_max_health(double new_mxh);
         void set_health(double new_health);
