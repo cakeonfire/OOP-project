@@ -8,6 +8,7 @@ class Entity {
         std::string name;
 
     protected:
+        Entity() = default;
         Entity(std::string name, double max_h, double health, double damage);
         Entity(std::string name, double health, double damage);
 
@@ -33,6 +34,9 @@ class Entity {
         virtual std::string get_species(void) const;
         std::string get_label(void) const;  // label of name + species (potentially sth more), not virtual -> just use get_species
         virtual void print_info(void) const;
+
+        virtual std::string export(void) const;
+        virtual Entity import(std::string import_str) const;
 };
 
 #endif

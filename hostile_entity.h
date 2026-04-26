@@ -5,6 +5,7 @@
 
 class HostileEntity : public Entity {
     protected:
+        HostileEntity() = default;
         HostileEntity(std::string name, double max_h, double health, double damage, int aggression_range);
         HostileEntity(std::string name, double health, double damage, int aggression_range);
 
@@ -28,6 +29,7 @@ class Undead : public HostileEntity {
         static constexpr bool undead = true;
 
     public:
+        Undead() = default;
         Undead(std::string name, double max_h, double health, double damage, int aggression_range);
         Undead(std::string name, double health, double damage, int aggression_range);
         ~Undead();
@@ -47,6 +49,7 @@ class Zombie : public Undead {
     public:
         Zombie(std::string name, double max_h, double health, double damage, int aggression_range, float infection_chance);
         Zombie(std::string name, double health, double damage, int aggression_range, float infection_chance);
+        Zombie(const std::string& import_str);
         ~Zombie();
 
         float get_infection_chance(void) const;
@@ -54,6 +57,7 @@ class Zombie : public Undead {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
+        std::string export(void) const override;
 };
 
 class Skeleton : public Undead {
@@ -63,6 +67,7 @@ class Skeleton : public Undead {
     public:
         Skeleton(std::string name, double max_h, double health, double damage, int aggression_range, int bow_range);
         Skeleton(std::string name, double health, double damage, int aggression_range, int bow_range);
+        Skeleton(const std::string& import_str);
         ~Skeleton();
 
         int get_bow_range(void) const;
@@ -70,6 +75,7 @@ class Skeleton : public Undead {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
+        std::string export(void) const override;
 };
 
 class Slime : public HostileEntity {
@@ -86,6 +92,7 @@ class Slime : public HostileEntity {
     public:
         Slime(std::string name, double max_h, double health, double damage, int aggression_range, Slime::SlimeSize size);
         Slime(std::string name, double health, double damage, int aggression_range, Slime::SlimeSize size);
+        Slime(const std::string& import_str);
         ~Slime();
 
         Slime::SlimeSize get_size(void) const;
@@ -96,6 +103,7 @@ class Slime : public HostileEntity {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
+        std::string export(void) const override;
 };
 
 #endif

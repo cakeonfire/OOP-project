@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <algorithm>
 
@@ -39,6 +40,16 @@ void Undead::print_info(void) const {
 // ZOMBIE
 Zombie::Zombie(string name, double max_h, double health, double damage, int aggression_range, float infection_chance) : Undead(name, max_h, health, damage, aggression_range), infection_chance(infection_chance) {}
 Zombie::Zombie(string name, double health, double damage, int aggression_range, float infection_chance) : Undead(name, health, damage, aggression_range), infection_chance(infection_chance) {}
+Zombie::Zombie(const string& import_str) {
+    istringstream iss(import_str);
+    string name;
+    iss >> name;
+    iss >> this->max_health;
+    iss >> this->health;
+    iss >> this->damage;
+    iss >> this->aggression_range;
+    iss >> this->infection_chance;
+}
 Zombie::~Zombie() {}
 
 float Zombie::get_infection_chance(void) const { return this->infection_chance; }
@@ -50,10 +61,26 @@ void Zombie::print_info(void) const {
     cout << "infection chance: " << this->infection_chance << "\n";
 }
 
+string Zombie::export(void) const {
+    ostringstream oss;
+    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->aggression_range << " " << this->infection_chance;
+    return oss.str();
+}
+
 
 // SKELETON
 Skeleton::Skeleton(string name, double max_h, double health, double damage, int aggression_range, int bow_range) : Undead(name, max_h, health, damage, aggression_range), bow_range(bow_range) {}
 Skeleton::Skeleton(string name, double health, double damage, int aggression_range, int bow_range) : Undead(name, health, damage, aggression_range), bow_range(bow_range) {}
+Skeleton::Skeleton(const string& import_str) {
+    istringstream iss(import_str);
+    string name;
+    iss >> name;
+    iss >> this->max_health;
+    iss >> this->health;
+    iss >> this->damage;
+    iss >> this->aggression_range;
+    iss >> this->bow_range;
+}
 Skeleton::~Skeleton() {}
 
 int Skeleton::get_bow_range(void) const { return this->bow_range; }
@@ -65,10 +92,32 @@ void Skeleton::print_info(void) const {
     cout << "bow range: " << this->bow_range << "\n";
 }
 
+string Skeleton::export(void) const {
+    ostringstream oss;
+    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->aggression_range << " " << this->bow_range;
+    return oss.str();
+}
+
 
 // SLIME
 Slime::Slime(std::string name, double max_h, double health, double damage, int aggression_range, SlimeSize size) : HostileEntity(name, max_h, health, damage, aggression_range), size(size) {}
 Slime::Slime(std::string name, double health, double damage, int aggression_range, SlimeSize size) : HostileEntity(name, health, damage, aggression_range), size(size) {}
+Slime::Slime(const string& import_str) {
+    istringstream iss(import_str);
+    string name;
+    int slime_size;
+    iss >> name;
+    iss >> this->max_health;
+    iss >> this->health;
+    iss >> this->damage;
+    iss >> this->aggression_range;
+    iss >> slime_size;
+    switch (slime_size) {
+        case 0: this->size = Slime::SlimeSize::small; break;
+        case 1: this->size = Slime::SlimeSize::medium; break;
+        case 2: this->size = Slime::SlimeSize::large; break;
+    }
+}
 Slime::~Slime() {}
 
 Slime::SlimeSize Slime::get_size(void) const { return this->size; }
@@ -101,4 +150,17 @@ void Slime::print_info(void) const {
     }
     cout << "slime size: " << size << "\n";
     cout << "can split: " << (this->can_split() ? "YES" : "NO") << "\n";
+}
+
+string Slime::export(void) const {
+    ostringstream oss;
+    int slime_size;
+    switch (this->size) {
+        case Slime::SlimeSize::small: slime_size = 0; break;
+        case Slime::SlimeSize::medium: slime_size = 1; break;
+        case Slime::SlimeSize::large: slime_size = 2; break;
+    }
+
+    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->aggression_range << " " << slime_size;
+    return oss.str();
 }

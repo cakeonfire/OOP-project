@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <algorithm>
 
 #include "entity.h"
@@ -24,6 +25,16 @@ void PlayerEntity::print_info(void) const {
 // HUMAN
 Human::Human(string name, double max_h, double health, double damage, int level, int strength) : PlayerEntity(name, max_h, health, damage, level), strength(strength) {}
 Human::Human(string name, double health, double damage, int level, int strength) : PlayerEntity(name, health, damage, level), strength(strength) {}
+Human::Human(const string& import_str) {
+    istringstream iss(import_str);
+    string name;
+    iss >> name;
+    iss >> this->max_health;
+    iss >> this->health;
+    iss >> this->damage;
+    iss >> this->level;
+    iss >> this->strength;
+}
 Human::~Human() {}
 
 int Human::get_strength(void) const { return this->strength; }
@@ -35,10 +46,26 @@ void Human::print_info(void) const {
     cout << "strength: " << this->strength << "\n";
 }
 
+string Human::export(void) const {
+    ostringstream oss;
+    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->strength;
+    return oss.str();
+}
+
 
 // DWARF
 Dwarf::Dwarf(string name, double max_h, double health, double damage, int level, int toughness) : PlayerEntity(name, max_h, health, damage, level), toughness(toughness) {}
 Dwarf::Dwarf(string name, double health, double damage, int level, int toughness) : PlayerEntity(name, health, damage, level), toughness(toughness) {}
+Dwarf::Dwarf(const string& import_str) {
+    istringstream iss(import_str);
+    string name;
+    iss >> name;
+    iss >> this->max_health;
+    iss >> this->health;
+    iss >> this->damage;
+    iss >> this->level;
+    iss >> this->toughness;
+}
 Dwarf::~Dwarf() {}
 
 int Dwarf::get_toughness(void) const { return this->toughness; }
@@ -50,10 +77,25 @@ void Dwarf::print_info(void) const {
     cout << "toughness: " << this->toughness << "\n";
 }
 
+string Dwarf::export(void) const {
+    ostringstream oss;
+    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->toughness;
+    return oss.str();
+}
 
 // ELF
 Elf::Elf(string name, double max_h, double health, double damage, int level, int agility) : PlayerEntity(name, max_h, health, damage, level), agility(agility) {}
 Elf::Elf(string name, double health, double damage, int level, int agility) : PlayerEntity(name, health, damage, level), agility(agility) {}
+Elf::Elf(const string& import_str) {
+    istringstream iss(import_str);
+    string name;
+    iss >> name;
+    iss >> this->max_health;
+    iss >> this->health;
+    iss >> this->damage;
+    iss >> this->level;
+    iss >> this->agility;
+}
 Elf::~Elf() {}
 
 int Elf::get_agility(void) const { return this->agility; }
@@ -63,4 +105,10 @@ string Elf::get_species(void) const { return "Elf"; }
 void Elf::print_info(void) const {
     PlayerEntity::print_info();
     cout << "agility: " << this->agility << "\n";
+}
+
+string Elf::export(void) const {
+    ostringstream oss;
+    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->agility;
+    return oss.str();
 }
