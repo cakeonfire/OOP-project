@@ -39,6 +39,33 @@ std::string cmd_to_str(CMD cmd) {
 
 namespace cmdapp {
 
+bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
+    if (cmd == CMD::CD) {
+        if (cmd_args.size() == 1) return true;
+        cout << "Invalid arguments for CD command: expected 1 argument: destination node\n";
+
+    } else if (cmd == CMD::EXIT) {
+        if (cmd_args.size() == 0) return true;
+        cout << "Invalid arguments for EXIT command: expected 0 arguments\n";
+
+    }
+
+    cout << "Unregistered command in _validate_cmd_args: " << cmd_to_str(cmd) << "\n";
+    return false;
+}
+
+
+void _exec_cmd_CD(vector<string>& cmd_args, Tree* tree, TreeNode** current_node) {
+    TreeNode* node_dest = tree->root->find_node_deep(cmd_args[0]);
+
+    if (node_dest == nullptr) {
+        cout << "Node \"" << cmd_args[0] << "\" not found\n";
+        return;
+    }
+
+    *current_node = node_dest;
+}
+
 
 string load_cmd(vector<string>& cmd_args) {
     string dummy, cmd_str, arg;
@@ -62,18 +89,31 @@ void cmd_loop(Tree* tree) {
     CMD cmd;
     vector<string> cmd_args;
 
-    while (running) {
-        cout << "--> ";
-        cmd_str = load_cmd(cmd_args);
+    TreeNode* node_ptr = tree->root;  // current node we're at
 
+    while (running) {
+        cmd_args.clear();  // clear for the next command
+        //cout << "--> ";
+        cout << "[" << node_ptr->name << "]> ";
+        cmd_str = load_cmd(cmd_args);
+        cmd = str_to_cmd(cmd_str);
+
+        if (cmd == CMD::ERR) {
+            cout << "Unknown command: " << cmd_str << "\n";
+            continue;
+        } else if (!_validate_cmd_args(cmd, cmd_args)) {
+            continue;
+        }
+
+        // DEBUG
         cout << cmd_str << " ";
         for (string arg : cmd_args) cout << arg << " ";
         cout << "\n";
-
-        cmd = str_to_cmd(cmd_str);
+        // END DEBUG
 
         switch (cmd) {
             case CMD::CD:
+                _exec_cmd_CD(cmd_args, tree, &node_ptr);
                 break;
             case CMD::MO:
                 break;
@@ -92,9 +132,9 @@ void cmd_loop(Tree* tree) {
             case CMD::EXIT:
                 running = false;
                 break;
+            default:
+                cout << "Reached end of switch block???\n";
         }
-
-        cmd_args.clear();  // clear for the next command
     }
 
 }
