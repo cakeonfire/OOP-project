@@ -5,6 +5,9 @@
 
 #include "cmdapp.h"
 #include "tree.h"
+#include "entity.h"
+#include "hostile_entity.h"
+#include "player_entity.h"
 
 using namespace std;
 
@@ -71,14 +74,75 @@ void _exec_cmd_CD(vector<string>& cmd_args, Tree* tree, TreeNode** current_node)
 }
 
 
-void _exec_cmd_MO(std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+void _exec_cmd_MO(vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
     if (!current_node->is_leaf()) {
         cout << "Can add entities only to the leaf nodes\n";
         return;
-    } else if (current_node->find_entity(cmd_args[0]) != nullptr) {  // check if entity of this name already exists
+    } else if (current_node->find_entity(cmd_args[0]) != nullptr) {  // check if entity with this name already exists
         cout << "Entity with name \"" << cmd_args[0] << "\" already exists\n";
         return;
     }
+
+    Entity* entity;
+    string name = cmd_args[0];
+    double health, damage;
+    int level, player_e_stat;
+    int aggr_range, bow_range;
+    float inf_chance;
+    Slime::SlimeSize slime_size;
+
+    if (current_node->name == "Human" || current_node->name == "Dwarf" || current_node->name == "Elf") {
+        try {
+            if (cmd_args.size() != 5) throw invalid_argument("");
+            health = stod(cmd_args[1]);
+            damage = stod(cmd_args[2]);
+            level = stoi(cmd_args[3]);
+            player_e_stat = stoi(cmd_args[4]);
+
+        } catch (const invalid_argument& exc) {
+            cout << "Invalid arguments for PlayerEntity: expected 5: <name> <health> <damage> <level> <strength/toughness/agility>\n";
+            return;
+        }
+        
+        if (current_node->name == "Human") entity = new Human(name, health, damage, level, player_e_stat);
+        else if (current_node->name == "Dwarf") entity = new Dwarf(name, health, damage, level, player_e_stat);
+        else if (current_node->name == "Elf") entity = new Elf(name, health, damage, level, player_e_stat);
+
+    } else if (current_node->name == "Zombie" || current_node->name == "Skeleton" || current_node->name == "Slime") {
+        try {
+            if (cmd_args.size() != 5) throw invalid_argument("");
+            health = stod(cmd_args[1]);
+            damage = stod(cmd_args[2]);
+            aggr_range = stoi(cmd_args[3]);
+
+            if (current_node->name == "Zombie") inf_chance = stof(cmd_args[4]);
+            else if (current_node->name == "Skeleton") bow_range = stoi(cmd_args[4]);
+            else if (current_node->name == "Slime") {
+                if (cmd_args[4] == "small") slime_size = Slime::SlimeSize::small;
+                else if (cmd_args[4] == "medium") slime_size = Slime::SlimeSize::medium;
+                else if (cmd_args[4] == "large") slime_size = Slime::SlimeSize::large;
+                else throw invalid_argument("");
+            }
+
+        } catch (const invalid_argument& exc) {
+            if (current_node->name == "Slime") {
+                cout << "Invalid arguments for Undead: expected 5: <name> <health> <damage> <aggression_range> <infection_chance/bow_range>\n";
+            } else {
+                cout << "Invalid arguments for Slime: expected 5: <name> <health> <damage> <aggression_range> <size:small|medium|large>\n";
+            }
+            return;
+        }
+
+        if (current_node->name == "Zombie") entity = new Zombie(name, health, damage, aggr_range, inf_chance);
+        else if (current_node->name == "Skeleton") entity = new Skeleton(name, health, damage, aggr_range, bow_range);
+        else if (current_node->name == "Slime") entity = new Slime(name, health, damage, aggr_range, slime_size);
+
+    } else {
+        cout << "Unknown leaf class: " << current_node->name << "\n";
+        return;
+    }
+
+    current_node->add_entity(entity);
 }
 
 
