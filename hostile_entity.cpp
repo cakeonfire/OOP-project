@@ -17,7 +17,11 @@ void HostileEntity::set_aggression_range(int new_aggr_range) { this->aggression_
 bool HostileEntity::is_undead(void) const { return this->undead; }
 
 string HostileEntity::get_species(void) const { return "HostileEntity"; };
-void HostileEntity::print_info(void) const {  }  // TODO
+void HostileEntity::print_info(void) const {
+    Entity::print_info();
+    cout << "undead: " << (this->is_undead() ? "YES" : "NO") << "\n";
+    cout << "aggression range: " << this->aggression_range << "\n";
+}
 
 
 // UNDEAD
@@ -27,7 +31,9 @@ Undead::~Undead() {}
 
 bool Undead::is_undead(void) const { return this->undead; }
 string Undead::get_species(void) const { return "Undead"; }
-void Undead::print_info(void) const { }  // TODO
+void Undead::print_info(void) const {
+    HostileEntity::print_info();
+}
 
 
 // ZOMBIE
@@ -39,7 +45,10 @@ float Zombie::get_infection_chance(void) const { return this->infection_chance; 
 void Zombie::set_infection_chance(float new_inf_chance) { this->infection_chance = max(0.0f, new_inf_chance); }
 
 string Zombie::get_species(void) const { return "Zombie"; }
-void Zombie::print_info(void) const {  };  // TODO
+void Zombie::print_info(void) const {
+    Undead::print_info();
+    cout << "infection chance: " << this->infection_chance << "\n";
+}
 
 
 // SKELETON
@@ -51,7 +60,10 @@ int Skeleton::get_bow_range(void) const { return this->bow_range; }
 void Skeleton::set_bow_range(int new_bow_range) { this->bow_range = max(0, new_bow_range); }
 
 string Skeleton::get_species(void) const { return "Skeleton"; }
-void Skeleton::print_info(void) const {  }  // TODO
+void Skeleton::print_info(void) const {
+    Undead::print_info();
+    cout << "bow range: " << this->bow_range << "\n";
+}
 
 
 // SLIME
@@ -62,14 +74,14 @@ Slime::~Slime() {}
 Slime::SlimeSize Slime::get_size(void) const { return this->size; }
 void Slime::set_size(Slime::SlimeSize new_size) { this->size = new_size; }
 
-bool Slime::can_split(void) {
+bool Slime::can_split(void) const {
     switch (this->size) {
         case Slime::SlimeSize::small: return false;
         default: return true;  // effectively a case for medium and large
     }
 }
 
-int Slime::split_count(void) {
+int Slime::split_count(void) const {
     switch (this->size) {
         case Slime::SlimeSize::small: return 0;
         case Slime::SlimeSize::medium: return 3;
@@ -79,4 +91,14 @@ int Slime::split_count(void) {
 }
 
 string Slime::get_species(void) const { return "Slime"; }
-void Slime::print_info(void) const { }  // TODO
+void Slime::print_info(void) const {
+    HostileEntity::print_info();
+    string size = "";
+    switch (this->size) {
+        case Slime::SlimeSize::large: size = "large"; break;
+        case Slime::SlimeSize::medium: size = "medium"; break;
+        case Slime::SlimeSize::small: size = "small"; break;
+    }
+    cout << "slime size: " << size << "\n";
+    cout << "can split: " << (this->can_split() ? "YES" : "NO") << "\n";
+}

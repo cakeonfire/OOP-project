@@ -91,8 +91,8 @@ class Slime : public HostileEntity {
         Slime::SlimeSize get_size(void) const;
         void set_size(Slime::SlimeSize new_size);
 
-        bool can_split(void);  // whether has sufficient size to split
-        int split_count(void);  // into how many smaller slimes will split
+        bool can_split(void) const;  // whether has sufficient size to split
+        int split_count(void) const;  // into how many smaller slimes will split
 
         std::string get_species(void) const override;
         void print_info(void) const override;

@@ -24,11 +24,9 @@ void Entity::set_health(double new_health) { this->health = min(this->max_health
 bool Entity::is_alive(void) const { return (this->health > 0.01); };
 
 string Entity::get_species(void) const { return "Entity"; };
-string Entity::get_label(void) const { return this->name + "(" + this->get_species() + ")"; };
+string Entity::get_label(void) const { return this->name + " (" + this->get_species() + ")"; };
 void Entity::print_info(void) const {
-    // TODO redo
-    //printf("Entity (%d)\n", _entity_id);
-    //printf("health: %f/%f\n", health, max_health);
-    //printf("damage: %f\n", damage);
-    //printf("speed: %d\n", speed);
+    cout << this->get_label() << "\n";
+    cout << "health: " << this->health << "/" << this->max_health << "\n";
+    cout << "damage: " << this->damage << "\n";
 }

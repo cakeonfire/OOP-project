@@ -63,6 +63,10 @@ bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
         if (cmd_args.size() == 0) return true;
         cout << "Invalid arguments for DIR command: expected 0 arguments\n";
 
+    } else if (cmd == CMD::SHOW) {
+        if (cmd_args.size() == 1) return true;
+        cout << "Invalid arguments for SHOW command: expected 1 argument: object name\n";
+
     } else if (cmd == CMD::EXIT) {
         if (cmd_args.size() == 0) return true;
         cout << "Invalid arguments for EXIT command: expected 0 arguments\n";
@@ -176,7 +180,7 @@ void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
     
     string name = cmd_args[0];
     Entity* entity = current_node->find_entity(name);
-    if (current_node->find_entity(name) == nullptr) {
+    if (entity == nullptr) {
         cout << "Entity with name \"" << name << "\" does not exist\n";
         return;
     }
@@ -195,6 +199,7 @@ void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
     istringstream iss(line);
     while (iss >> arg) new_args.push_back(arg);
 
+    if (new_args.size() == 0) return;  // just abort operation
     if (new_args.size() != 6) {
         cout << "Invalid argument amount\n";
         return;
@@ -307,10 +312,11 @@ void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
 
 void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
     if (current_node->is_leaf() && current_node->entities.size() > 0) {
-        cout << current_node->name << ":\n";
-        for (auto* entity : current_node->entities) {
-            cout << "    " << entity->get_name() << "\n";
-        }
+        //cout << current_node->name << ":\n";
+        //for (auto* entity : current_node->entities) {
+        //    cout << "    " << entity->get_name() << "\n";
+        //}
+        for (auto* entity : current_node->entities) cout << entity->get_label() << "\n";
         return;
     }
 
@@ -318,7 +324,16 @@ void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
 }
 
 
-void _exec_cmd_SHOW(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
+void _exec_cmd_SHOW(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    Entity* entity = current_node->find_entity(cmd_args[0]);
+    if (entity == nullptr) {
+        cout << "This node has no entities";
+        return;
+    }
+    entity->print_info();
+}
+
+
 void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
 void _exec_cmd_READ(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
 
@@ -349,8 +364,7 @@ void cmd_loop(Tree* tree) {
 
     while (running) {
         cmd_args.clear();  // clear for the next command
-        //cout << "--> ";
-        cout << "[" << node_ptr->name << "]> ";
+        cout << "\n[" << node_ptr->name << "]> ";
         cmd_str = load_cmd(cmd_args);
         cmd = str_to_cmd(cmd_str);
 
@@ -362,9 +376,9 @@ void cmd_loop(Tree* tree) {
         }
 
         // DEBUG
-        cout << cmd_str << " ";
-        for (string arg : cmd_args) cout << arg << " ";
-        cout << "\n";
+        //cout << cmd_str << " ";
+        //for (string arg : cmd_args) cout << arg << " ";
+        //cout << "\n";
         // END DEBUG
 
         switch (cmd) {
@@ -396,7 +410,7 @@ void cmd_loop(Tree* tree) {
                 running = false;
                 break;
             default:
-                cout << "Reached end of switch block???\n";
+                throw invalid_argument(cmd_to_str(cmd));
         }
     }
 
