@@ -29,6 +29,7 @@ Human::Human(const string& import_str) {
     istringstream iss(import_str);
     string name;
     iss >> name;
+    this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
@@ -46,7 +47,7 @@ void Human::print_info(void) const {
     cout << "strength: " << this->strength << "\n";
 }
 
-string Human::export(void) const {
+string Human::export_to_str(void) const {
     ostringstream oss;
     oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->strength;
     return oss.str();
@@ -60,6 +61,7 @@ Dwarf::Dwarf(const string& import_str) {
     istringstream iss(import_str);
     string name;
     iss >> name;
+    this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
@@ -77,7 +79,7 @@ void Dwarf::print_info(void) const {
     cout << "toughness: " << this->toughness << "\n";
 }
 
-string Dwarf::export(void) const {
+string Dwarf::export_to_str(void) const {
     ostringstream oss;
     oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->toughness;
     return oss.str();
@@ -90,6 +92,7 @@ Elf::Elf(const string& import_str) {
     istringstream iss(import_str);
     string name;
     iss >> name;
+    this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
@@ -107,7 +110,7 @@ void Elf::print_info(void) const {
     cout << "agility: " << this->agility << "\n";
 }
 
-string Elf::export(void) const {
+string Elf::export_to_str(void) const {
     ostringstream oss;
     oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->agility;
     return oss.str();

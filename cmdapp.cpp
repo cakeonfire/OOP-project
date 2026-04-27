@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include <sstream>
+#include <fstream>
+#include <vector>
 
 #include "cmdapp.h"
 #include "tree.h"
@@ -21,6 +22,7 @@ CMD str_to_cmd(std::string str_cmd) {
     else if (str_cmd == "SHOW") return CMD::SHOW;
     else if (str_cmd == "SAVE") return CMD::SAVE;
     else if (str_cmd == "READ") return CMD::READ;
+    else if (str_cmd == "TREE") return CMD::TREE;
     else if (str_cmd == "EXIT") return CMD::EXIT;
     return CMD::ERR;
 }
@@ -35,6 +37,7 @@ std::string cmd_to_str(CMD cmd) {
         case CMD::DIR: return "DIR";
         case CMD::SHOW: return "SHOW";
         case CMD::SAVE: return "SAVE";
+        case CMD::TREE: return "TREE";
         case CMD::READ: return "READ";
     }
     return "ERR";
@@ -66,6 +69,18 @@ bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
     } else if (cmd == CMD::SHOW) {
         if (cmd_args.size() == 1) return true;
         cout << "Invalid arguments for SHOW command: expected 1 argument: object name\n";
+
+    } else if (cmd == CMD::SAVE) {
+        if (cmd_args.size() == 1) return true;
+        cout << "Invalid arguments for SHOW command: expected 1 argument: output file name\n";
+
+    } else if (cmd == CMD::READ) {
+        if (cmd_args.size() == 1) return true;
+        cout << "Invalid arguments for SHOW command: expected 1 argument: input file name\n";
+
+    } else if (cmd == CMD::TREE) {
+        if (cmd_args.size() == 0) return true;
+        cout << "Invalid arguments for TREE command: expected 0 arguments\n";
 
     } else if (cmd == CMD::EXIT) {
         if (cmd_args.size() == 0) return true;
@@ -125,7 +140,7 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
         else if (current_node->name == "Dwarf") entity = new Dwarf(name, health, damage, level, player_e_stat);
         else if (current_node->name == "Elf") entity = new Elf(name, health, damage, level, player_e_stat);
 
-    } else if (current_node->parent->name == "HostileEntity") {
+    } else if (current_node->parent->name == "Undead" || current_node->parent->name == "HostileEntity") {
         try {
             if (cmd_args.size() != 5) throw invalid_argument("");
             health = stod(cmd_args[1]);
@@ -143,9 +158,9 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
 
         } catch (const invalid_argument& exc) {
             if (current_node->name == "Slime") {
-                cout << "Invalid arguments for Undead: expected 5: <name> <health> <damage> <aggression_range> <infection_chance/bow_range>\n";
-            } else {
                 cout << "Invalid arguments for Slime: expected 5: <name> <health> <damage> <aggression_range> <size:small|medium|large>\n";
+            } else {
+                cout << "Invalid arguments for Undead: expected 5: <name> <health> <damage> <aggression_range> <infection_chance/bow_range>\n";
             }
             return;
         }
@@ -188,7 +203,7 @@ void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
     // edit prompt
     cout << "Provide new argument list; Enter \".\" for arguments to NOT modify; Press 'Enter' to abort\n";
     if (current_node->parent->name == "PlayerEntity") cout << "<name> <max_health> <health> <damage> <level> <strength/toughness/agility>\n";
-    else if (current_node->parent->name == "HostileEntity") cout << "<name> <max_health> <health> <damage> <aggression_range> <infection_chance/bow_range>\n";
+    else if (current_node->parent->name == "Undead") cout << "<name> <max_health> <health> <damage> <aggression_range> <infection_chance/bow_range>\n";
     else if (current_node->name == "Slime") cout << "<name> <max_health> <health> <damage> <aggression_range> <size:small|medium|large>\n";
     cout << entity->get_name() << ": ";
 
@@ -213,7 +228,13 @@ void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
     Slime::SlimeSize slime_size;
 
     // new name
-    if (new_args[0] != ".") new_name = new_args[0];
+    if (new_args[0] != ".") {
+        new_name = new_args[0];
+        if (current_node->find_entity(new_name) != nullptr) {  // entity with this name already exists
+            cout << "Node with this name already exists\n";
+            return;
+        }
+    }
 
     // new max_health
     if (new_args[1] != ".") {
@@ -249,12 +270,12 @@ void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
     if (new_args[4] != ".") {
         try {
             if (current_node->parent->name == "PlayerEntity") level = stoi(new_args[4]);
-            else if (current_node->parent->name == "HostileEntity") aggr_range = stoi(new_args[4]);
+            else if (current_node->parent->name == "Undead" || current_node->parent->name == "HostileEntity") aggr_range = stoi(new_args[4]);
 
         } catch (const invalid_argument& exc) {
             if (current_node->parent->name == "PlayerEntity")
                 cout << "Invalid level argument\n";
-            else if (current_node->parent->name == "HostileEntity")
+            else
                 cout << "Invalid aggression_range argument\n";
             return;
         }
@@ -296,7 +317,7 @@ void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
 
     if (new_args[4] != ".") {
         if (current_node->parent->name == "PlayerEntity") dynamic_cast<PlayerEntity*>(entity)->set_level(level);
-        else if (current_node->parent->name == "HostileEntity") dynamic_cast<HostileEntity*>(entity)->set_aggression_range(aggr_range);
+        else if (current_node->parent->name == "HostileEntity" || current_node->parent->name == "Undead") dynamic_cast<HostileEntity*>(entity)->set_aggression_range(aggr_range);
     }
 
     if (new_args[5] != ".") {
@@ -327,15 +348,83 @@ void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
 void _exec_cmd_SHOW(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
     Entity* entity = current_node->find_entity(cmd_args[0]);
     if (entity == nullptr) {
-        cout << "This node has no entities";
+        cout << "Entity with name \"" << cmd_args[0] << "\" does not exist\n";
         return;
     }
     entity->print_info();
 }
 
 
-void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
-void _exec_cmd_READ(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {}
+void _rec_save(ofstream& out_file, TreeNode* node) {
+    if (node->is_leaf()) {
+        if (node->entities.size() > 0) {
+            out_file << ">" << node->name << "\n";
+            for (auto* entity : node->entities) {
+                out_file << entity->export_to_str() << "\n";
+            }
+        }
+        return;
+    }
+
+    for (auto* child : node->children) _rec_save(out_file, child);
+}
+
+
+void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    ifstream check(cmd_args[0]);
+    if (check.good()) {
+        cout << "File \"" << cmd_args[0] << "\" already exists\n";
+        check.close();
+        return;
+    }
+
+    ofstream out_file(cmd_args[0]);
+    if (!out_file) {
+        cout << "Could not open file\n";
+        out_file.close();
+        return;
+    }
+    _rec_save(out_file, tree->root);
+    out_file.close();
+}
+
+
+void _exec_cmd_READ(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    ifstream in_file(cmd_args[0]);
+    if (!in_file) {
+        cout << "Could not open file\n";
+        in_file.close();
+        return;
+    }
+    tree->clear();
+
+    TreeNode* node_ptr;
+    Entity* entity;
+    string line, entity_type;
+    while (getline(in_file, line)) {
+        if (line.empty()) continue;
+
+        if (line.substr(0, 1) == ">") {
+            entity_type = line.substr(1);
+            node_ptr = tree->root->find_node_deep(entity_type);
+            continue;
+        }
+
+        if (entity_type == "Human") entity = new Human(line);
+        else if (entity_type == "Dwarf") entity = new Dwarf(line);
+        else if (entity_type == "Elf") entity = new Elf(line);
+        else if (entity_type == "Zombie") entity = new Zombie(line);
+        else if (entity_type == "Skeleton") entity = new Skeleton(line);
+        else if (entity_type == "Slime") entity = new Slime(line);
+
+        node_ptr->add_entity(entity);
+    }
+}
+
+
+void _exec_cmd_TREE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    tree->print();
+}
 
 
 string load_cmd(vector<string>& cmd_args) {
@@ -368,18 +457,14 @@ void cmd_loop(Tree* tree) {
         cmd_str = load_cmd(cmd_args);
         cmd = str_to_cmd(cmd_str);
 
-        if (cmd == CMD::ERR) {
+        if (cmd_str.size() == 0) {
+            continue;
+        } else if (cmd == CMD::ERR) {
             cout << "Unknown command: " << cmd_str << "\n";
             continue;
         } else if (!_validate_cmd_args(cmd, cmd_args)) {
             continue;
         }
-
-        // DEBUG
-        //cout << cmd_str << " ";
-        //for (string arg : cmd_args) cout << arg << " ";
-        //cout << "\n";
-        // END DEBUG
 
         switch (cmd) {
             case CMD::CD:
@@ -405,6 +490,9 @@ void cmd_loop(Tree* tree) {
                 break;
             case CMD::READ:
                 _exec_cmd_READ(cmd_args, tree, node_ptr);
+                break;
+            case CMD::TREE:
+                _exec_cmd_TREE(cmd_args, tree, node_ptr);
                 break;
             case CMD::EXIT:
                 running = false;

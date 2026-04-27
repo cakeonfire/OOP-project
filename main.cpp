@@ -29,7 +29,6 @@ Tree* build_class_hierarchy() {
 
 int main(void) {
     Tree* class_tree = build_class_hierarchy();
-    class_tree->print();
 
     cmdapp::cmd_loop(class_tree);
 

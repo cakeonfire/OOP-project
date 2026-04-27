@@ -38,6 +38,10 @@ TreeNode* Tree::add_node(string parent_name, string node_name) {
     return new_node;
 }
 
+void Tree::clear(void) {
+    this->root->clear();
+}
+
 void Tree::print(void) {
     this->root->print();
 }
@@ -58,7 +62,7 @@ TreeNode::~TreeNode() {
         delete e;
     }
 
-    cout << "del: " << this->name << "\n";
+    //cout << "del: " << this->name << "\n";
 }
 
 TreeNode* TreeNode::add_node(string name) {
@@ -107,18 +111,6 @@ void TreeNode::add_entity(Entity* entity) {
 
 
 bool TreeNode::remove_entity(Entity* entity) {
-    //int removed = 0;
-    //for (auto it = this->entities.begin(); it != this->entities.end(); ) {
-    //    if (*it != entity) {
-    //        this->entities.erase(it);
-    //        delete *it;
-    //        removed++;
-    //    } else {
-    //        it++;
-    //    }
-    //}
-    //return (removed != 0);
-
     for (int i=0; i<this->entities.size(); i++) {
         if (this->entities[i] == entity) {
             this->entities.erase(this->entities.begin() + i);
@@ -128,6 +120,16 @@ bool TreeNode::remove_entity(Entity* entity) {
     return false;
 
 }
+
+
+void TreeNode::clear(void) {
+    // by default deep clear
+    for (auto* entity : this->entities) delete entity;
+    this->entities.clear();
+
+    for (auto* child : this->children) child->clear();
+}
+
 
 Entity* TreeNode::find_entity(const std::string& name) {
     for (auto* entity : this->entities) {

@@ -57,7 +57,7 @@ class Zombie : public Undead {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
-        std::string export(void) const override;
+        std::string export_to_str(void) const override;
 };
 
 class Skeleton : public Undead {
@@ -75,7 +75,7 @@ class Skeleton : public Undead {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
-        std::string export(void) const override;
+        std::string export_to_str(void) const override;
 };
 
 class Slime : public HostileEntity {
@@ -103,7 +103,7 @@ class Slime : public HostileEntity {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
-        std::string export(void) const override;
+        std::string export_to_str(void) const override;
 };
 
 #endif

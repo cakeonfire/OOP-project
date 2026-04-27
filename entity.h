@@ -35,8 +35,7 @@ class Entity {
         std::string get_label(void) const;  // label of name + species (potentially sth more), not virtual -> just use get_species
         virtual void print_info(void) const;
 
-        virtual std::string export(void) const;
-        virtual Entity import(std::string import_str) const;
+        virtual std::string export_to_str(void) const;
 };
 
 #endif

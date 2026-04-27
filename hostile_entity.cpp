@@ -38,12 +38,15 @@ void Undead::print_info(void) const {
 
 
 // ZOMBIE
-Zombie::Zombie(string name, double max_h, double health, double damage, int aggression_range, float infection_chance) : Undead(name, max_h, health, damage, aggression_range), infection_chance(infection_chance) {}
-Zombie::Zombie(string name, double health, double damage, int aggression_range, float infection_chance) : Undead(name, health, damage, aggression_range), infection_chance(infection_chance) {}
+Zombie::Zombie(string name, double max_h, double health, double damage, int aggression_range, float infection_chance)
+        : Undead(name, max_h, health, damage, aggression_range), infection_chance(infection_chance) { this->set_infection_chance(this->infection_chance); }
+Zombie::Zombie(string name, double health, double damage, int aggression_range, float infection_chance)
+        : Undead(name, health, damage, aggression_range), infection_chance(infection_chance) { this->set_infection_chance(this->infection_chance); }
 Zombie::Zombie(const string& import_str) {
     istringstream iss(import_str);
     string name;
     iss >> name;
+    this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
@@ -53,15 +56,15 @@ Zombie::Zombie(const string& import_str) {
 Zombie::~Zombie() {}
 
 float Zombie::get_infection_chance(void) const { return this->infection_chance; }
-void Zombie::set_infection_chance(float new_inf_chance) { this->infection_chance = max(0.0f, new_inf_chance); }
+void Zombie::set_infection_chance(float new_inf_chance) { this->infection_chance = min(max(0.0f, new_inf_chance), 1.0f); }
 
 string Zombie::get_species(void) const { return "Zombie"; }
 void Zombie::print_info(void) const {
     Undead::print_info();
-    cout << "infection chance: " << this->infection_chance << "\n";
+    cout << "infection chance: " << this->infection_chance * 100 << "%\n";
 }
 
-string Zombie::export(void) const {
+string Zombie::export_to_str(void) const {
     ostringstream oss;
     oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->aggression_range << " " << this->infection_chance;
     return oss.str();
@@ -75,6 +78,7 @@ Skeleton::Skeleton(const string& import_str) {
     istringstream iss(import_str);
     string name;
     iss >> name;
+    this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
@@ -92,7 +96,7 @@ void Skeleton::print_info(void) const {
     cout << "bow range: " << this->bow_range << "\n";
 }
 
-string Skeleton::export(void) const {
+string Skeleton::export_to_str(void) const {
     ostringstream oss;
     oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->aggression_range << " " << this->bow_range;
     return oss.str();
@@ -107,6 +111,7 @@ Slime::Slime(const string& import_str) {
     string name;
     int slime_size;
     iss >> name;
+    this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
@@ -150,9 +155,10 @@ void Slime::print_info(void) const {
     }
     cout << "slime size: " << size << "\n";
     cout << "can split: " << (this->can_split() ? "YES" : "NO") << "\n";
+    cout << "split count: " << this->split_count() << "\n";
 }
 
-string Slime::export(void) const {
+string Slime::export_to_str(void) const {
     ostringstream oss;
     int slime_size;
     switch (this->size) {

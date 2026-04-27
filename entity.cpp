@@ -28,5 +28,8 @@ string Entity::get_label(void) const { return this->name + " (" + this->get_spec
 void Entity::print_info(void) const {
     cout << this->get_label() << "\n";
     cout << "health: " << this->health << "/" << this->max_health << "\n";
+    cout << "alive: " << (this->is_alive() ? "YES" : "NO") << "\n";
     cout << "damage: " << this->damage << "\n";
 }
+
+string Entity::export_to_str(void) const { return ""; }

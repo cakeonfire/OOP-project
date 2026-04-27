@@ -40,7 +40,7 @@ class Human : public PlayerEntity {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
-        std::string export(void) const override;
+        std::string export_to_str(void) const override;
 };
 
 class Dwarf : public PlayerEntity {
@@ -58,7 +58,7 @@ class Dwarf : public PlayerEntity {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
-        std::string export(void) const override;
+        std::string export_to_str(void) const override;
 };
 
 class Elf : public PlayerEntity {
@@ -76,7 +76,7 @@ class Elf : public PlayerEntity {
 
         std::string get_species(void) const override;
         void print_info(void) const override;
-        std::string export(void) const override;
+        std::string export_to_str(void) const override;
 };
 
 #endif

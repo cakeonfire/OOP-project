@@ -20,6 +20,8 @@ enum CMD {
     SAVE,
     READ,
 
+    TREE,
+
     // custom
     EXIT,
 
@@ -44,6 +46,7 @@ void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNod
 void _exec_cmd_SHOW(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
 void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
 void _exec_cmd_READ(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
+void _exec_cmd_TREE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node);
 }
 
 #endif
