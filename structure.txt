@@ -34,4 +34,3 @@ update:
 
 
 // TODO
-add getters/setters for new stuff to hostiles
