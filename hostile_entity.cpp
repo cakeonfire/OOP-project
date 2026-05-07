@@ -9,8 +9,10 @@
 using namespace std;
 
 
-HostileEntity::HostileEntity(string name, double max_h, double health, double damage, int aggro_range, int exp_reward) : Entity(name, max_h, health, damage), aggression_range(aggro_range), experience_reward(exp_reward) {}
-HostileEntity::HostileEntity(string name, double health, double damage, int exp_reward) : Entity(name, health, damage), aggression_range(5), experience_reward(exp_reward) {}
+HostileEntity::HostileEntity(string name, double max_h, double health, double damage, int aggro_range, int exp_reward)
+        : Entity(name, max_h, health, damage), aggression_range(aggro_range), experience_reward(exp_reward) {}
+HostileEntity::HostileEntity(string name, double health, double damage, int exp_reward)
+        : Entity(name, health, damage), aggression_range(5), experience_reward(exp_reward) {}
 HostileEntity::~HostileEntity() {}
 
 int HostileEntity::get_aggression_range(void) const { return this->aggression_range; }
@@ -141,7 +143,8 @@ string Skeleton::export_to_str(void) const {
 // SLIME
 Slime::Slime(string name, double max_h, double health, double damage, int aggro_range, int exp_reward, Slime::SlimeSize size, int resistance)
         : HostileEntity(name, max_h, health, damage, aggro_range, exp_reward), size(size), resistance(resistance) {}
-Slime::Slime(string name, double health, double damage, int exp_reward, Slime::SlimeSize size, int resistance) : HostileEntity(name, health, damage, exp_reward), size(size), resistance(resistance) {}
+Slime::Slime(string name, double health, double damage, int exp_reward, Slime::SlimeSize size, int resistance)
+        : HostileEntity(name, health, damage, exp_reward), size(size), resistance(resistance) {}
 Slime::Slime(const string& import_str) {
     istringstream iss(import_str);
     string name;
@@ -189,15 +192,16 @@ int Slime::split_count(void) const {
 string Slime::get_species(void) const { return "Slime"; }
 void Slime::print_info(void) const {
     HostileEntity::print_info();
-    string size = "";
+    string slime_size = "";
     switch (this->size) {
-        case Slime::SlimeSize::large: size = "large"; break;
-        case Slime::SlimeSize::medium: size = "medium"; break;
-        case Slime::SlimeSize::small: size = "small"; break;
+        case Slime::SlimeSize::large: slime_size = "large"; break;
+        case Slime::SlimeSize::medium: slime_size = "medium"; break;
+        case Slime::SlimeSize::small: slime_size = "small"; break;
     }
-    cout << "slime size: " << size << "\n";
+    cout << "slime size: " << slime_size << "\n";
     cout << "can split: " << (this->can_split() ? "YES" : "NO") << "\n";
     cout << "split count: " << this->split_count() << "\n";
+    cout << "resistance: " << this->resistance << "\n";
 }
 
 string Slime::export_to_str(void) const {

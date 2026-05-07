@@ -3,6 +3,23 @@
 
 #include <string>
 
+namespace EntityEnum {
+    // bases' names
+    inline const std::string ENTITY = "Entity";
+    inline const std::string PLAYER_ENTITY = "PlayerEntity";
+    inline const std::string HOSTILE_ENTITY = "HostileEntity";
+    inline const std::string UNDEAD = "Undead";
+
+    // leaf names
+    inline const std::string HUMAN = "Human";
+    inline const std::string DWARF = "Dwarf";
+    inline const std::string ELF = "Elf";
+    inline const std::string ZOMBIE = "Zombie";
+    inline const std::string SKELETON = "Skeleton";
+    inline const std::string SLIME = "Slime";
+}
+
+
 class Entity {
     private:
         std::string name;

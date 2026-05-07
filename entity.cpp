@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 Entity::Entity(string name, double max_h, double health, double damage) : name(name), max_health(max_h), health(health), damage(damage) {}
 Entity::Entity(string name, double health, double damage) : name(name), max_health(health), health(health), damage(damage) {}
 Entity::~Entity() {}
