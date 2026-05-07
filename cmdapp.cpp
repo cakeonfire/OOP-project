@@ -205,7 +205,9 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
 
         if (current_node->parent->name == EE::PLAYER_ENTITY) cout << "<guild> <stat>";
         else if (current_node->parent->name == EE::HOSTILE_ENTITY) cout << "<experience_reward> ";
-        
+
+        // TODO what about Undead?
+        // or might have provided too many args in the string below (hostile entities specifically)
         if (current_node->name == EE::ZOMBIE) cout << "<can_infect:0|1> <infection_chance>";
         else if (current_node->name == EE::SKELETON) cout << "<accuracy> <bow_range>";
         else if (current_node->name == EE::SLIME) cout << "<size:small|medium|large> <resistance>";
@@ -247,7 +249,23 @@ void _exec_cmd_MDO(const vector<string>& cmd_args, Tree* tree, TreeNode* current
         return;
     }
 
-    map<string, vector<string> >
+    //map<string, vector<string> > fields;
+    //fields[EE::ENTITY] = {"name", "health", "max_health", "damage"};
+    //fields[EE::PLAYER_ENTITY] = {"guild", "level"};
+    //fields[EE::HOSTILE_ENTITY] = {"aggro_range", "exp_reward"};
+    //fields[EE::UNDEAD] = {"revive_count", "revive_cd"};
+
+    //fields[EE::HUMAN] = {"strength", "sword_level"};
+    //fields[EE::DWARF] = {"toughness", "axe_level"};
+    //fields[EE::ELF] = {"agility", "bow_level"};
+    //fields[EE::ZOMBIE] = {"can_infect", "inf_chance"};
+    //fields[EE::SKELETON] = {"accuracy", "bow_range"};
+    //fields[EE::SLIME] = {"slime", "resistance"};
+
+    cout << "Provide new argument list; Enter \".\" for arguments to NOT modify; Press 'Enter' to abort\n";
+    cout << "<name> <health> <max_health> <damage>";
+    if (current_node->parent->name == EE::PLAYER_ENTITY) cout << "<guild> <level> <stat> <weapon_level>";
+    if (current_node->parent->name == EE::UNDEAD) cout << "<stat> <weapon_level>";
 
 }
 
