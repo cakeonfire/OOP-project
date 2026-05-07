@@ -3,6 +3,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <map>
 
 #include "cmdapp.h"
 #include "tree.h"
@@ -233,12 +234,30 @@ void _exec_cmd_DO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
 }
 
 
-void _exec_cmd_MDO(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+void _exec_cmd_MDO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
     if (!current_node->is_leaf()) {
         cout << "This node has no entities\n";
         return;
     }
-    
+
+    string name = cmd_args[0];
+    Entity* entity = current_node->find_entity(name);
+    if (entity == nullptr) {
+        cout << "Entity with name \"" << name << "\" does not exist\n";
+        return;
+    }
+
+    map<string, vector<string> >
+
+}
+
+
+void _exec_cmd_MDO_old(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
+    if (!current_node->is_leaf()) {
+        cout << "This node has no entities\n";
+        return;
+    }
+
     string name = cmd_args[0];
     Entity* entity = current_node->find_entity(name);
     if (entity == nullptr) {
