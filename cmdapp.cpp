@@ -231,8 +231,24 @@ void _exec_cmd_DO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
     Entity* entity = current_node->find_entity(cmd_args[0]);
     bool rm_status = current_node->remove_entity(entity);
     if (!rm_status) {
-        cout << "No entity to delete with name: \"" << cmd_args[0] << "\"\n";
+        cout << "No entity" /*to delete*/ " with name: \"" << cmd_args[0] << "\"\n";
     }
+}
+
+
+string _prompt_input(const string& msg) {
+    string line, value;
+    cout << msg;
+    getline(cin, line);
+
+    istringstream iss(line);
+    iss >> value;
+
+    return value;
+}
+
+
+void _MDO_inner(Entity* entity) {
 }
 
 
@@ -249,24 +265,161 @@ void _exec_cmd_MDO(const vector<string>& cmd_args, Tree* tree, TreeNode* current
         return;
     }
 
-    //map<string, vector<string> > fields;
-    //fields[EE::ENTITY] = {"name", "health", "max_health", "damage"};
-    //fields[EE::PLAYER_ENTITY] = {"guild", "level"};
-    //fields[EE::HOSTILE_ENTITY] = {"aggro_range", "exp_reward"};
-    //fields[EE::UNDEAD] = {"revive_count", "revive_cd"};
+    // Entity
+    string name_str, max_h_str, health_str, damage_str;
+    double max_h, health, damage;
 
-    //fields[EE::HUMAN] = {"strength", "sword_level"};
-    //fields[EE::DWARF] = {"toughness", "axe_level"};
-    //fields[EE::ELF] = {"agility", "bow_level"};
-    //fields[EE::ZOMBIE] = {"can_infect", "inf_chance"};
-    //fields[EE::SKELETON] = {"accuracy", "bow_range"};
-    //fields[EE::SLIME] = {"slime", "resistance"};
+    // PlayerEntity + specific Player classes
+    string guild, level_str, stat_str, weapon_str;
+    int level, stat, weapon_lvl;
 
-    cout << "Provide new argument list; Enter \".\" for arguments to NOT modify; Press 'Enter' to abort\n";
-    cout << "<name> <health> <max_health> <damage>";
-    if (current_node->parent->name == EE::PLAYER_ENTITY) cout << "<guild> <level> <stat> <weapon_level>";
-    if (current_node->parent->name == EE::UNDEAD) cout << "<stat> <weapon_level>";
+    string aggro_str, exp_str, rv_count_str, rv_cd_str;
+    string can_infect_str, inf_chance_str, accuracy_str, bow_range_str, resist_str, size_str;
+    int aggro_range, exp_reward, rv_count, rv_cd;
+    bool can_infect; float inf_chance;      // Zombie
+    int accuracy, bow_range;                // Skeleton
+    int resistance; Slime::SlimeSize size;  // Slime
 
+    try {
+        name_str = _prompt_input("name: ");
+
+        max_h_str = _prompt_input("max health: ");
+        if (max_h_str.size() > 0) max_h = stod(max_h_str);
+
+        health_str = _prompt_input("health: ");
+        if (health_str.size() > 0) health = stod(health_str);
+
+        damage_str = _prompt_input("damage: ");
+        if (damage_str.size() > 0) damage = stod(damage_str);
+
+        // PlayerEntities
+        if (current_node->parent->name == EE::PLAYER_ENTITY) {
+            guild = _prompt_input("guild: ");
+
+            string stat_label;
+            if (current_node->name == EE::HUMAN) stat_label = "strength";
+            if (current_node->name == EE::DWARF) stat_label = "toughness";
+            if (current_node->name == EE::ELF) stat_label = "agility";
+            stat_str = _prompt_input(stat_label + ": ");
+            if (stat_str.size() > 0) stat = stoi(stat_str);
+
+            string weapon_label;
+            if (current_node->name == EE::HUMAN) weapon_label = "sword level";
+            if (current_node->name == EE::DWARF) weapon_label = "axe level";
+            if (current_node->name == EE::ELF) weapon_label = "bow level";
+            weapon_str = _prompt_input(weapon_label + ": ");
+            if (weapon_str.size() > 0) weapon_lvl = stoi(weapon_str);
+        }
+
+        // Case for all HostileEntities (Zombie, Skeleton, Slime)
+        if (current_node->parent->name == EE::HOSTILE_ENTITY || current_node->name == EE::UNDEAD) {
+            aggro_str = _prompt_input("aggression range: ");
+            if (aggro_str.size() > 0) aggro_range = stoi(aggro_str);
+
+            exp_str = _prompt_input("experience reward: ");
+            if (exp_str.size() > 0) exp_reward = stoi(exp_str);
+        }
+
+        // Undead (only Zombie & Skeleton)
+        if (current_node->parent->name == EE::UNDEAD) {
+            rv_count_str = _prompt_input("revive count: ");
+            if (rv_count_str.size() > 0) rv_count = stoi(rv_count_str);
+
+            rv_cd_str = _prompt_input("revive cooldown: ");
+            if (rv_cd_str.size() > 0) rv_cd = stoi(rv_cd_str);
+        }
+
+        // Zombie
+        if (current_node->name == EE::ZOMBIE) {
+            can_infect_str = _prompt_input("can infect? (0|1): ");
+            if (can_infect_str == "0") can_infect = false;
+            else if (can_infect_str == "1") can_infect = true;
+            else throw invalid_argument("");
+
+            inf_chance_str = _prompt_input("infection chance: ");
+            inf_chance = stof(inf_chance_str);
+        }
+
+        // Skeleton
+        if (current_node->name == EE::SKELETON) {
+            accuracy_str = _prompt_input("accuracy: ");
+            accuracy = stoi(accuracy_str);
+
+            bow_range_str = _prompt_input("bow range: ");
+            bow_range = stoi(bow_range_str);
+        }
+
+        // Slime
+        if (current_node->name == EE::SLIME) {
+            size_str = _prompt_input("size (small|medium|large): ");
+            if (size_str == "small") size = Slime::SlimeSize::small;
+            else if (size_str == "medium") size = Slime::SlimeSize::medium;
+            else if (size_str == "large") size = Slime::SlimeSize::large;
+            else throw invalid_argument("");
+
+            resist_str = _prompt_input("resistance: ");
+            resistance = stoi(resist_str);
+        }
+
+    } catch (const invalid_argument& exc) {
+        cout << "Invalid value!\n";
+        return;
+    }
+
+    // actually modify validated fields
+    if (name_str.size() > 0) entity->set_name(name_str);
+    if (max_h_str.size() > 0) entity->set_max_health(max_h);
+    if (health_str.size() > 0) entity->set_health(health);
+    if (damage_str.size() > 0) entity->set_damage(damage);
+
+    if (current_node->parent->name == EE::PLAYER_ENTITY) {
+        PlayerEntity* player = dynamic_cast<PlayerEntity*>(entity);
+        if (guild.size() > 0) player->set_guild(guild);
+        if (level_str.size() > 0) player->set_level(level);
+
+        if (current_node->name == EE::HUMAN) {
+            Human* human = dynamic_cast<Human*>(entity);
+            if (stat_str.size() > 0) human->set_strength(stat);
+            if (weapon_str.size() > 0) human->set_sword_level(weapon_lvl);
+
+        } else if (current_node->name == EE::DWARF) {
+            Dwarf* dwarf = dynamic_cast<Dwarf*>(entity);
+            if (stat_str.size() > 0) dwarf->set_toughness(stat);
+            if (weapon_str.size() > 0) dwarf->set_axe_level(weapon_lvl);
+
+        } else if (current_node->name == EE::ELF) {
+            Elf* elf = dynamic_cast<Elf*>(entity);
+            if (stat_str.size() > 0) elf->set_agility(stat);
+            if (weapon_str.size() > 0) elf->set_bow_level(weapon_lvl);
+        }
+
+    } else if (current_node->parent->name == EE::UNDEAD || current_node->parent->name == EE::HOSTILE_ENTITY) {
+        HostileEntity* hostile_entity = dynamic_cast<HostileEntity*>(entity);
+        if (aggro_str.size() > 0) hostile_entity->set_aggression_range(aggro_range);
+        if (exp_str.size() > 0) hostile_entity->set_experience_reward(exp_reward);
+
+        if (current_node->parent->name == EE::UNDEAD) {
+            Undead* undead = dynamic_cast<Undead*>(entity);
+            if (rv_count_str.size() > 0) undead->set_revive_count(rv_count);
+            if (rv_cd_str.size() > 0) undead->set_revive_cooldown(rv_cd);
+        }
+
+        if (current_node->name == EE::ZOMBIE) {
+            Zombie* zombie = dynamic_cast<Zombie*>(entity);
+            if (can_infect_str.size() > 0) zombie->set_can_infect(can_infect);
+            if (inf_chance_str.size() > 0) zombie->set_infection_chance(inf_chance);
+
+        } else if (current_node->name == EE::SKELETON) {
+            Skeleton* skeleton = dynamic_cast<Skeleton*>(entity);
+            if (accuracy_str.size() > 0) skeleton->set_accuracy(accuracy);
+            if (bow_range_str.size() > 0) skeleton->set_bow_range(bow_range);
+
+        } else if (current_node->name == EE::SLIME) {
+            Slime* slime = dynamic_cast<Slime*>(entity);
+            if (size_str.size() > 0) slime->set_size(size);
+            if (resist_str.size() > 0) slime->set_resistance(resistance);
+        }
+    }
 }
 
 
