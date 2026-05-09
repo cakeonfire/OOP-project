@@ -8,29 +8,3 @@ Entity
         Undead
             Zombie
             Skeleton
-
-Entity
-    PlayerEntity (guild/experience) *
-        Human (strength, sword_level\diplomacy) *
-        Elf (agility, bow_level\???) *
-        Dwarf (toughness, axe_level/mining) *
-    HostileEntity (aggression_range, exp_reward/follow_range/preferred_target)
-        Slime (size, resistance)
-        Undead (revive_count, revive_cooldown, sun_burn??, can_revive)
-            Zombie (infection_chance, infection_spread/inf_strength/inf_cooldown, etc.)
-            Skeleton (bow_range, accuracy)
-
-- update constructors
-- secondary constructors will have to be further simplified
-regarding those setters - setters do account for invalid values (like negative) but constructors dont!!!
-
-update:
-    - constructors
-    - import
-    - export
-    - print_info
-    - MO
-    - MDO
-
-
-// TODO
