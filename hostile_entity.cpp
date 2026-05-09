@@ -10,9 +10,16 @@ using namespace std;
 
 
 HostileEntity::HostileEntity(string name, double max_h, double health, double damage, int aggro_range, int exp_reward)
-        : Entity(name, max_h, health, damage), aggression_range(aggro_range), experience_reward(exp_reward) {}
+//        : Entity(name, max_h, health, damage), aggression_range(aggro_range), experience_reward(exp_reward) {}
+        : Entity(name, max_h, health, damage) {
+    this->set_aggression_range(aggro_range);
+    this->set_experience_reward(exp_reward);
+}
 HostileEntity::HostileEntity(string name, double health, double damage, int exp_reward)
-        : Entity(name, health, damage), aggression_range(5), experience_reward(exp_reward) {}
+//        : Entity(name, health, damage), aggression_range(5), experience_reward(exp_reward) {}
+    : HostileEntity(name, health, health, damage, 5, exp_reward) {}
+
+    // TODO start here update other entities
 HostileEntity::~HostileEntity() {}
 
 int HostileEntity::get_aggression_range(void) const { return this->aggression_range; }
@@ -31,7 +38,8 @@ void HostileEntity::print_info(void) const {
 // UNDEAD
 Undead::Undead(string name, double max_h, double health, double damage, int aggro_range, int exp_reward, int revive_count, int revive_cooldown)
         : HostileEntity(name, max_h, health, damage, aggro_range, exp_reward), revive_count(revive_count), revive_cooldown(revive_cooldown) {}
-Undead::Undead(string name, double health, double damage, int exp_reward) : HostileEntity(name, health, damage, exp_reward), revive_count(1), revive_cooldown(30) {}
+Undead::Undead(string name, double health, double damage, int exp_reward)
+        : HostileEntity(name, health, damage, exp_reward), revive_count(1), revive_cooldown(30) {}
 Undead::~Undead() {}
 
 int Undead::get_revive_count(void) const { return this->revive_count; }
@@ -52,7 +60,8 @@ void Undead::print_info(void) const {
 // ZOMBIE
 Zombie::Zombie(string name, double max_h, double health, double damage, int aggro_range, int exp_reward, int revive_count, int revive_cooldown, bool can_infect, float inf_chance)
         : Undead(name, max_h, health, damage, aggro_range, exp_reward, revive_count, revive_cooldown), can_infect(can_infect), infection_chance(inf_chance) {}
-Zombie::Zombie(string name, double health, double damage, int exp_reward, bool can_infect) : Undead(name, health, damage, exp_reward), can_infect(can_infect), infection_chance(0.5f) {}
+Zombie::Zombie(string name, double health, double damage, int exp_reward, bool can_infect)
+        : Undead(name, health, damage, exp_reward), can_infect(can_infect), infection_chance(0.5f) {}
 Zombie::Zombie(const string& import_str) {
     istringstream iss(import_str);
     string name;
@@ -98,7 +107,8 @@ string Zombie::export_to_str(void) const {
 // SKELETON
 Skeleton::Skeleton(std::string name, double max_h, double health, double damage, int aggro_range, int exp_reward, int revive_count, int revive_cooldown, int accuracy, int bow_range)
         : Undead(name, max_h, health, damage, aggro_range, exp_reward, revive_count, revive_cooldown), accuracy(accuracy), bow_range(bow_range) {}
-Skeleton::Skeleton(std::string name, double health, double damage, int exp_reward, int accuracy) : Undead(name, health, damage, exp_reward), accuracy(accuracy), bow_range(3) {}
+Skeleton::Skeleton(std::string name, double health, double damage, int exp_reward, int accuracy)
+        : Undead(name, health, damage, exp_reward), accuracy(accuracy), bow_range(3) {}
 Skeleton::Skeleton(const string& import_str) {
     istringstream iss(import_str);
     string name;

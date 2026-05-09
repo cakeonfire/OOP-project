@@ -8,8 +8,13 @@
 
 using namespace std;
 
-PlayerEntity::PlayerEntity(string name, double max_h, double health, double damage, string guild, int level) : Entity(name, max_h, health, damage), guild(guild), level(level) {}
-PlayerEntity::PlayerEntity(string name, double health, double damage, string guild) : Entity(name, health, damage), guild(guild), level(0) {}
+PlayerEntity::PlayerEntity(string name, double max_h, double health, double damage, string guild, int level)
+        : Entity(name, max_h, health, damage), guild(guild) {
+    this->set_level(level);
+}
+PlayerEntity::PlayerEntity(string name, double health, double damage, string guild)
+//        : Entity(name, health, damage), guild(guild), level(0) {}
+        : PlayerEntity(name, health, health, damage, guild, 0) {}
 PlayerEntity::~PlayerEntity(void) {}
 
 const std::string& PlayerEntity::get_guild(void) const { return this->guild; }
@@ -27,8 +32,14 @@ void PlayerEntity::print_info(void) const {
 
 
 // HUMAN
-Human::Human(string name, double max_h, double health, double damage, string guild, int level, int str, int sword_lvl) : PlayerEntity(name, max_h, health, damage, guild, level), strength(str), sword_level(sword_lvl) {}
-Human::Human(string name, double health, double damage, string guild, int str) : PlayerEntity(name, health, damage, guild), strength(str), sword_level(0) {}
+Human::Human(string name, double max_h, double health, double damage, string guild, int level, int str, int sword_lvl)
+        : PlayerEntity(name, max_h, health, damage, guild, level) {
+    this->set_strength(str);
+    this->set_strength(sword_lvl);
+}
+Human::Human(string name, double health, double damage, string guild, int str)
+//        : PlayerEntity(name, health, damage, guild), strength(str), sword_level(0) {}
+        : Human(name, health, health, damage, guild, 0, str, 0) {}
 Human::Human(const string& import_str) {
     istringstream iss(import_str);
     string name;
@@ -63,8 +74,15 @@ string Human::export_to_str(void) const {
 
 
 // DWARF
-Dwarf::Dwarf(string name, double max_h, double health, double damage, string guild, int level, int toughness, int axe_lvl) : PlayerEntity(name, max_h, health, damage, guild, level), toughness(toughness), axe_level(axe_lvl) {}
-Dwarf::Dwarf(string name, double health, double damage, string guild, int toughness) : PlayerEntity(name, health, damage, guild), toughness(toughness), axe_level(0) {}
+Dwarf::Dwarf(string name, double max_h, double health, double damage, string guild, int level, int toughness, int axe_lvl)
+//        : PlayerEntity(name, max_h, health, damage, guild, level), toughness(toughness), axe_level(axe_lvl) {}
+        : PlayerEntity(name, max_h, health, damage, guild, level) {
+    this->set_toughness(toughness);
+    this->set_axe_level(axe_lvl);
+}
+Dwarf::Dwarf(string name, double health, double damage, string guild, int toughness)
+//        : PlayerEntity(name, health, damage, guild), toughness(toughness), axe_level(0) {}
+        : Dwarf(name, health, health, damage, guild, 0, toughness, 0) {}
 Dwarf::Dwarf(const string& import_str) {
     istringstream iss(import_str);
     string name;
@@ -98,8 +116,15 @@ string Dwarf::export_to_str(void) const {
 }
 
 // ELF
-Elf::Elf(string name, double max_h, double health, double damage, string guild, int level, int agility, int bow_lvl) : PlayerEntity(name, max_h, health, damage, guild, level), agility(agility), bow_level(bow_lvl) {}
-Elf::Elf(string name, double health, double damage, string guild, int agility) : PlayerEntity(name, health, damage, guild), agility(agility), bow_level(0) {}
+Elf::Elf(string name, double max_h, double health, double damage, string guild, int level, int agility, int bow_lvl)
+//        : PlayerEntity(name, max_h, health, damage, guild, level), agility(agility), bow_level(bow_lvl) {}
+        : PlayerEntity(name, max_h, health, damage, guild, level) {
+    this->set_agility(agility);
+    this->set_bow_level(bow_level);
+}
+Elf::Elf(string name, double health, double damage, string guild, int agility)
+//        : PlayerEntity(name, health, damage, guild), agility(agility), bow_level(0) {}
+        : Elf(name, health, health, damage, guild, 0, agility, 0) {}
 Elf::Elf(const string& import_str) {
     istringstream iss(import_str);
     string name;
