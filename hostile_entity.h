@@ -61,7 +61,7 @@ class Zombie : public Undead {
 
     public:
         Zombie(std::string name, double max_h, double health, double damage, int aggro_range, int exp_reward, int revive_count, int revive_cooldown, bool can_infect, float inf_chance);
-        Zombie(std::string name, double health, double damage, int exp_reward, bool can_infect);
+        Zombie(std::string name, double health, double damage, int exp_reward, bool can_infect, float inf_chance);
         Zombie(const std::string& import_str);
         ~Zombie();
 
@@ -84,7 +84,7 @@ class Skeleton : public Undead {
 
     public:
         Skeleton(std::string name, double max_h, double health, double damage, int aggro_range, int exp_reward, int revive_count, int revive_cooldown, int accuracy, int bow_range);
-        Skeleton(std::string name, double health, double damage, int exp_reward, int accuracy);
+        Skeleton(std::string name, double health, double damage, int exp_reward, int accuracy, int bow_range);
         Skeleton(const std::string& import_str);
         ~Skeleton();
 

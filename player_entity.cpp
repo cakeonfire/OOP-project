@@ -35,13 +35,13 @@ void PlayerEntity::print_info(void) const {
 Human::Human(string name, double max_h, double health, double damage, string guild, int level, int str, int sword_lvl)
         : PlayerEntity(name, max_h, health, damage, guild, level) {
     this->set_strength(str);
-    this->set_strength(sword_lvl);
+    this->set_sword_level(sword_lvl);
 }
 Human::Human(string name, double health, double damage, string guild, int str)
         : PlayerEntity(name, health, damage, guild) {
 //        : Human(name, health, health, damage, guild, 0, str, 0) {
     this->set_strength(str);
-    this->set_strength(0);
+    this->set_sword_level(0);
 }
 Human::Human(const string& import_str) {
     istringstream iss(import_str);
@@ -71,7 +71,14 @@ void Human::print_info(void) const {
 
 string Human::export_to_str(void) const {
     ostringstream oss;
-    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->strength << " " << this->sword_level;
+    oss << this->get_name() << " ";
+    oss << this->max_health << " ";
+    oss << this->health << " ";
+    oss << this->damage << " ";
+    oss << this->get_guild() << " ";
+    oss << this->level << " ";
+    oss << this->strength << " ";
+    oss << this->get_sword_level();
     return oss.str();
 }
 
@@ -117,7 +124,14 @@ void Dwarf::print_info(void) const {
 
 string Dwarf::export_to_str(void) const {
     ostringstream oss;
-    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->toughness << " " << this->axe_level;
+    oss << this->get_name() << " ";
+    oss << this->max_health << " ";
+    oss << this->health << " ";
+    oss << this->damage << " ";
+    oss << this->get_guild() << " ";
+    oss << this->level << " ";
+    oss << this->toughness << " ";
+    oss << this->get_axe_level();
     return oss.str();
 }
 
@@ -162,6 +176,13 @@ void Elf::print_info(void) const {
 
 string Elf::export_to_str(void) const {
     ostringstream oss;
-    oss << this->get_name() << " " << this->max_health << " " << this->health << " " << this->damage << " " << this->level << " " << this->agility << " " << this->bow_level;
+    oss << this->get_name() << " ";
+    oss << this->max_health << " ";
+    oss << this->health << " ";
+    oss << this->damage << " ";
+    oss << this->get_guild() << " ";
+    oss << this->level << " ";
+    oss << this->agility << " ";
+    oss << this->get_bow_level();
     return oss.str();
 }

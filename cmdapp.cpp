@@ -123,8 +123,8 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
     if (current_node->name == EE::HUMAN) arg_count = 5;
     else if (current_node->name == EE::DWARF) arg_count = 5;
     else if (current_node->name == EE::ELF) arg_count = 5;
-    else if (current_node->name == EE::ZOMBIE) arg_count = 5;
-    else if (current_node->name == EE::SKELETON) arg_count = 5;
+    else if (current_node->name == EE::ZOMBIE) arg_count = 6;
+    else if (current_node->name == EE::SKELETON) arg_count = 6;
     else if (current_node->name == EE::SLIME) arg_count = 6;
 
     if (cmd_args.size() != arg_count) {
@@ -148,44 +148,38 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
     Slime::SlimeSize slime_size;
     int resistance;
 
-    // load Entity fields
-    if (!invalid_args) {
-        try {
-            name = cmd_args[arg_ptr++];
-            health = stod(cmd_args[arg_ptr++]);
-            damage = stod(cmd_args[arg_ptr++]);
+    try {
+        if (invalid_args) throw invalid_argument("");
+        name = cmd_args[arg_ptr++];
+        health = stod(cmd_args[arg_ptr++]);
+        damage = stod(cmd_args[arg_ptr++]);
 
-        } catch (const invalid_argument& exc) {
-            invalid_args = true;
-        }
-    }
-
-    // load PlayerEntity fields (and for specific Player classes)
-    if (!invalid_args && current_node->parent->name == EE::PLAYER_ENTITY) {
-        try {
+        // PlayerEntities
+        if (current_node->parent->name == EE::PLAYER_ENTITY) {
             guild = cmd_args[arg_ptr++];
             player_stat = stoi(cmd_args[arg_ptr++]);
-
-        } catch (const invalid_argument& exc) {
-            invalid_args = true;
         }
-    }
 
-    // load HostileEntity & Undead fields (Zombie & Skeleton)
-    if (!invalid_args && current_node->parent->name == EE::UNDEAD) {
-        try {
+        // HostileEntities (Undead & Slime)
+        if (current_node->parent->name == EE::UNDEAD || current_node->parent->name == EE::HOSTILE_ENTITY) {
             exp_reward = stoi(cmd_args[arg_ptr++]);
-
-        } catch (const invalid_argument& exc) {
-            invalid_args = true;
         }
-    }
 
-    // load HostileEntity fields (Slime)
-    if (!invalid_args && current_node->parent->name == EE::HOSTILE_ENTITY) {
-        try {
-            exp_reward = stoi(cmd_args[arg_ptr++]);
+        if (current_node->name == EE::ZOMBIE) {
+            string can_inf_str = cmd_args[arg_ptr++];
+            if (can_inf_str == "0") can_infect = false;
+            else if (can_inf_str == "1") can_infect = true;
+            else throw invalid_argument("");
 
+            inf_chance = stof(cmd_args[arg_ptr++]);
+        }
+
+        if (current_node->name == EE::SKELETON) {
+            accuracy = stoi(cmd_args[arg_ptr++]);
+            bow_range = stoi(cmd_args[arg_ptr++]);
+        }
+
+        if (current_node->name == EE::SLIME) {
             string slime_size_str = cmd_args[arg_ptr++];
             if (slime_size_str == "small") slime_size = Slime::SlimeSize::small;
             else if (slime_size_str == "medium") slime_size = Slime::SlimeSize::medium;
@@ -193,21 +187,70 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
             else throw invalid_argument("");
 
             resistance = stoi(cmd_args[arg_ptr++]);
-
-        } catch (const invalid_argument& exc) {
-            invalid_args = true;
         }
+
+    } catch (const invalid_argument& exc) {
+        invalid_args = true;
     }
+
+    // load Entity fields
+    //if (!invalid_args) {
+    //    try {
+    //        name = cmd_args[arg_ptr++];
+    //        health = stod(cmd_args[arg_ptr++]);
+    //        damage = stod(cmd_args[arg_ptr++]);
+
+    //    } catch (const invalid_argument& exc) {
+    //        invalid_args = true;
+    //    }
+    //}
+
+    //// load PlayerEntity fields (and for specific Player classes)
+    //if (!invalid_args && current_node->parent->name == EE::PLAYER_ENTITY) {
+    //    try {
+    //        guild = cmd_args[arg_ptr++];
+    //        player_stat = stoi(cmd_args[arg_ptr++]);
+
+    //    } catch (const invalid_argument& exc) {
+    //        invalid_args = true;
+    //    }
+    //}
+
+    //// load HostileEntity & Undead fields (Zombie & Skeleton)
+    //if (!invalid_args && current_node->parent->name == EE::UNDEAD) {
+    //    try {
+    //        exp_reward = stoi(cmd_args[arg_ptr++]);
+
+    //    } catch (const invalid_argument& exc) {
+    //        invalid_args = true;
+    //    }
+    //}
+
+    //// load HostileEntity fields (Slime)
+    //if (!invalid_args && current_node->parent->name == EE::HOSTILE_ENTITY) {
+    //    try {
+    //        exp_reward = stoi(cmd_args[arg_ptr++]);
+
+    //        string slime_size_str = cmd_args[arg_ptr++];
+    //        if (slime_size_str == "small") slime_size = Slime::SlimeSize::small;
+    //        else if (slime_size_str == "medium") slime_size = Slime::SlimeSize::medium;
+    //        else if (slime_size_str == "large") slime_size = Slime::SlimeSize::large;
+    //        else throw invalid_argument("");
+
+    //        resistance = stoi(cmd_args[arg_ptr++]);
+
+    //    } catch (const invalid_argument& exc) {
+    //        invalid_args = true;
+    //    }
+    //}
 
     if (invalid_args) {
         cout << "Invalid arguments for " << current_node->name << ": expected " << arg_count << ": ";
         cout << "<name> <health> <damage> ";
 
         if (current_node->parent->name == EE::PLAYER_ENTITY) cout << "<guild> <stat>";
-        else if (current_node->parent->name == EE::HOSTILE_ENTITY) cout << "<experience_reward> ";
+        else if (current_node->parent->name == EE::UNDEAD || current_node->parent->name == EE::HOSTILE_ENTITY) cout << "<experience_reward> ";
 
-        // TODO what about Undead?
-        // or might have provided too many args in the string below (hostile entities specifically)
         if (current_node->name == EE::ZOMBIE) cout << "<can_infect:0|1> <infection_chance>";
         else if (current_node->name == EE::SKELETON) cout << "<accuracy> <bow_range>";
         else if (current_node->name == EE::SLIME) cout << "<size:small|medium|large> <resistance>";
@@ -219,8 +262,8 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
     if (current_node->name == EE::HUMAN) entity = new Human(name, health, damage, guild, player_stat);
     else if (current_node->name == EE::DWARF) entity = new Dwarf(name, health, damage, guild, player_stat);
     else if (current_node->name == EE::ELF) entity = new Elf(name, health, damage, guild, player_stat);
-    else if (current_node->name == EE::ZOMBIE) entity = new Zombie(name, health, damage, exp_reward, can_infect);
-    else if (current_node->name == EE::SKELETON) entity = new Skeleton(name, health, damage, exp_reward, accuracy);
+    else if (current_node->name == EE::ZOMBIE) entity = new Zombie(name, health, damage, exp_reward, can_infect, inf_chance);
+    else if (current_node->name == EE::SKELETON) entity = new Skeleton(name, health, damage, exp_reward, accuracy, bow_range);
     else if (current_node->name == EE::SLIME) entity = new Slime(name, health, damage, exp_reward, slime_size, resistance);
 
     current_node->add_entity(entity);

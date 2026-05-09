@@ -9,7 +9,7 @@ using namespace std;
 
 
 Entity::Entity(string name, double max_h, double health, double damage) : name(name) {
-    this->set_max_health(max_health);
+    this->set_max_health(max_h);
     this->set_health(health);
     this->set_damage(damage);
 }
@@ -27,7 +27,7 @@ void Entity::set_damage(double new_dmg) { this->damage = max(0.1, new_dmg); };
 void Entity::set_max_health(double new_max_h) { this->max_health = max(0.1, new_max_h); };
 void Entity::set_health(double new_health) { this->health = min(this->max_health, max(0.0, new_health)); };
 
-bool Entity::is_alive(void) const { return (this->health > 0.01); };
+bool Entity::is_alive(void) const { return (this->health > 0.0); };
 
 string Entity::get_species(void) const { return "Entity"; };
 string Entity::get_label(void) const { return this->name + " (" + this->get_species() + ")"; };

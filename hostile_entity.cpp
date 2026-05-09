@@ -36,7 +36,7 @@ void HostileEntity::print_info(void) const {
 
 // UNDEAD
 Undead::Undead(string name, double max_h, double health, double damage, int aggro_range, int exp_reward, int revive_count, int revive_cooldown)
-        : HostileEntity(name, max_h, health, damage, aggro_range, exp_reward), revive_count(revive_count), revive_cooldown(revive_cooldown) {
+        : HostileEntity(name, max_h, health, damage, aggro_range, exp_reward) {
     this->set_revive_count(revive_count);
     this->set_revive_cooldown(revive_cooldown);
 }
@@ -68,10 +68,10 @@ Zombie::Zombie(string name, double max_h, double health, double damage, int aggr
     this->set_can_infect(can_infect);
     this->set_infection_chance(inf_chance);
 }
-Zombie::Zombie(string name, double health, double damage, int exp_reward, bool can_infect)
+Zombie::Zombie(string name, double health, double damage, int exp_reward, bool can_infect, float inf_chance)
         : Undead(name, health, damage, exp_reward) {
     this->set_can_infect(can_infect);
-    this->set_infection_chance(0.5f);
+    this->set_infection_chance(inf_chance);
 }
 Zombie::Zombie(const string& import_str) {
     istringstream iss(import_str);
@@ -102,7 +102,7 @@ void Zombie::set_infection_chance(float new_inf_chance) { this->infection_chance
 string Zombie::get_species(void) const { return "Zombie"; }
 void Zombie::print_info(void) const {
     Undead::print_info();
-    cout << "can infect: " << (this->get_can_infect() ? "YES" : "NO") << "%\n";
+    cout << "can infect: " << (this->get_can_infect() ? "YES" : "NO") << "\n";
     cout << "infection chance: " << this->infection_chance * 100 << "%\n";
 }
 
@@ -121,10 +121,10 @@ Skeleton::Skeleton(std::string name, double max_h, double health, double damage,
     this->set_accuracy(accuracy);
     this->set_bow_range(bow_range);
 }
-Skeleton::Skeleton(std::string name, double health, double damage, int exp_reward, int accuracy)
+Skeleton::Skeleton(std::string name, double health, double damage, int exp_reward, int accuracy, int bow_range)
         : Undead(name, health, damage, exp_reward) {
     this->set_accuracy(accuracy);
-    this->set_bow_range(3);
+    this->set_bow_range(bow_range);
 }
 Skeleton::Skeleton(const string& import_str) {
     istringstream iss(import_str);
@@ -155,6 +155,7 @@ void Skeleton::set_bow_range(int new_bow_range) { this->bow_range = max(0, new_b
 string Skeleton::get_species(void) const { return "Skeleton"; }
 void Skeleton::print_info(void) const {
     Undead::print_info();
+    cout << "accuracy: " << this->accuracy << "\n";
     cout << "bow range: " << this->bow_range << "\n";
 }
 
