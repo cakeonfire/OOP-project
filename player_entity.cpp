@@ -38,8 +38,11 @@ Human::Human(string name, double max_h, double health, double damage, string gui
     this->set_strength(sword_lvl);
 }
 Human::Human(string name, double health, double damage, string guild, int str)
-//        : PlayerEntity(name, health, damage, guild), strength(str), sword_level(0) {}
-        : Human(name, health, health, damage, guild, 0, str, 0) {}
+        : PlayerEntity(name, health, damage, guild) {
+//        : Human(name, health, health, damage, guild, 0, str, 0) {
+    this->set_strength(str);
+    this->set_strength(0);
+}
 Human::Human(const string& import_str) {
     istringstream iss(import_str);
     string name;
@@ -81,8 +84,11 @@ Dwarf::Dwarf(string name, double max_h, double health, double damage, string gui
     this->set_axe_level(axe_lvl);
 }
 Dwarf::Dwarf(string name, double health, double damage, string guild, int toughness)
-//        : PlayerEntity(name, health, damage, guild), toughness(toughness), axe_level(0) {}
-        : Dwarf(name, health, health, damage, guild, 0, toughness, 0) {}
+        : PlayerEntity(name, health, damage, guild), toughness(toughness), axe_level(0) {
+//        : Dwarf(name, health, health, damage, guild, 0, toughness, 0) {}
+    this->set_toughness(toughness);
+    this->set_axe_level(0);
+}
 Dwarf::Dwarf(const string& import_str) {
     istringstream iss(import_str);
     string name;
@@ -120,11 +126,14 @@ Elf::Elf(string name, double max_h, double health, double damage, string guild, 
 //        : PlayerEntity(name, max_h, health, damage, guild, level), agility(agility), bow_level(bow_lvl) {}
         : PlayerEntity(name, max_h, health, damage, guild, level) {
     this->set_agility(agility);
-    this->set_bow_level(bow_level);
+    this->set_bow_level(bow_lvl);
 }
 Elf::Elf(string name, double health, double damage, string guild, int agility)
-//        : PlayerEntity(name, health, damage, guild), agility(agility), bow_level(0) {}
-        : Elf(name, health, health, damage, guild, 0, agility, 0) {}
+        : PlayerEntity(name, health, damage, guild) {
+//        : Elf(name, health, health, damage, guild, 0, agility, 0) {}
+    this->set_agility(agility);
+    this->set_bow_level(0);
+}
 Elf::Elf(const string& import_str) {
     istringstream iss(import_str);
     string name;
