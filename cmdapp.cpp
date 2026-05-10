@@ -193,57 +193,6 @@ void _exec_cmd_MO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_
         invalid_args = true;
     }
 
-    // load Entity fields
-    //if (!invalid_args) {
-    //    try {
-    //        name = cmd_args[arg_ptr++];
-    //        health = stod(cmd_args[arg_ptr++]);
-    //        damage = stod(cmd_args[arg_ptr++]);
-
-    //    } catch (const invalid_argument& exc) {
-    //        invalid_args = true;
-    //    }
-    //}
-
-    //// load PlayerEntity fields (and for specific Player classes)
-    //if (!invalid_args && current_node->parent->name == EE::PLAYER_ENTITY) {
-    //    try {
-    //        guild = cmd_args[arg_ptr++];
-    //        player_stat = stoi(cmd_args[arg_ptr++]);
-
-    //    } catch (const invalid_argument& exc) {
-    //        invalid_args = true;
-    //    }
-    //}
-
-    //// load HostileEntity & Undead fields (Zombie & Skeleton)
-    //if (!invalid_args && current_node->parent->name == EE::UNDEAD) {
-    //    try {
-    //        exp_reward = stoi(cmd_args[arg_ptr++]);
-
-    //    } catch (const invalid_argument& exc) {
-    //        invalid_args = true;
-    //    }
-    //}
-
-    //// load HostileEntity fields (Slime)
-    //if (!invalid_args && current_node->parent->name == EE::HOSTILE_ENTITY) {
-    //    try {
-    //        exp_reward = stoi(cmd_args[arg_ptr++]);
-
-    //        string slime_size_str = cmd_args[arg_ptr++];
-    //        if (slime_size_str == "small") slime_size = Slime::SlimeSize::small;
-    //        else if (slime_size_str == "medium") slime_size = Slime::SlimeSize::medium;
-    //        else if (slime_size_str == "large") slime_size = Slime::SlimeSize::large;
-    //        else throw invalid_argument("");
-
-    //        resistance = stoi(cmd_args[arg_ptr++]);
-
-    //    } catch (const invalid_argument& exc) {
-    //        invalid_args = true;
-    //    }
-    //}
-
     if (invalid_args) {
         cout << "Invalid arguments for " << current_node->name << ": expected " << arg_count << ": ";
         cout << "<name> <health> <damage> ";
@@ -338,6 +287,8 @@ void _exec_cmd_MDO(const vector<string>& cmd_args, Tree* tree, TreeNode* current
         // PlayerEntities
         if (current_node->parent->name == EE::PLAYER_ENTITY) {
             guild = _prompt_input("guild: ");
+            level_str = _prompt_input("level: ");
+            if (level_str.size() > 0) level = stoi(level_str);
 
             string stat_label;
             if (current_node->name == EE::HUMAN) stat_label = "strength";
