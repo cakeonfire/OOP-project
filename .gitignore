@@ -4,5 +4,6 @@ bin/
 .vscode/
 
 **/*.exe
+**/*.txt
 test*
 todo.txt

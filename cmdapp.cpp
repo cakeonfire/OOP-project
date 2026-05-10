@@ -669,13 +669,29 @@ void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNo
 
 
 void _exec_cmd_READ(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
-    ifstream in_file(cmd_args[0]);
+    ifstream in_file(cmd_args[0]);  // if we cant open the file there's no reason to continue
     if (!in_file) {
         cout << "Could not open file\n";
         in_file.close();
         return;
     }
-    tree->clear();
+
+    if (tree->entity_count() > 0) {
+        string confirm;
+        cout << "Loading save will remove current entities, proceed? [Y/n]: ";
+        getline(cin, confirm);
+        confirm.erase(0, confirm.find_first_not_of(" \n\r\t"));
+        confirm.erase(confirm.find_last_not_of(" \n\r\t")+1);
+
+        if (confirm == "Y" || confirm == "y") {
+            tree->clear();
+            cout << "Removed currently stored entities\n";
+        } else {
+            cout << "Aborting operation\n";
+            in_file.close();
+            return;
+        }
+    }
 
     TreeNode* node_ptr;
     Entity* entity;

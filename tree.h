@@ -20,6 +20,7 @@ struct Tree {
 
     TreeNode* add_node(std::string node_name);  // this node will be a new root
     TreeNode* add_node(std::string parent_name, std::string node_name);
+    int entity_count(void);
     void clear(void);
     void print(void);
 };
@@ -44,6 +45,7 @@ struct TreeNode {
 
     void add_entity(Entity* entity);
     bool remove_entity(Entity* entity);  // returns whether the entity was successfully removed
+    int entity_count(void);
     void clear(void);  // remove all entities here and in subbranches
     Entity* find_entity(const std::string& name);
 

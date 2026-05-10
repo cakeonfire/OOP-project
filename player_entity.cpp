@@ -45,12 +45,14 @@ Human::Human(string name, double health, double damage, string guild, int str)
 }
 Human::Human(const string& import_str) {
     istringstream iss(import_str);
-    string name;
+    string name, guild;
     iss >> name;
     this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
+    iss >> guild;
+    this->set_guild(guild);
     iss >> this->level;
     iss >> this->strength;
     iss >> this->sword_level;
@@ -98,12 +100,14 @@ Dwarf::Dwarf(string name, double health, double damage, string guild, int toughn
 }
 Dwarf::Dwarf(const string& import_str) {
     istringstream iss(import_str);
-    string name;
+    string name, guild;
     iss >> name;
     this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
+    iss >> guild;
+    this->set_guild(guild);
     iss >> this->level;
     iss >> this->toughness;
     iss >> this->axe_level;
@@ -150,12 +154,14 @@ Elf::Elf(string name, double health, double damage, string guild, int agility)
 }
 Elf::Elf(const string& import_str) {
     istringstream iss(import_str);
-    string name;
+    string name, guild;
     iss >> name;
     this->set_name(name);
     iss >> this->max_health;
     iss >> this->health;
     iss >> this->damage;
+    iss >> guild;
+    this->set_guild(guild);
     iss >> this->level;
     iss >> this->agility;
     iss >> this->bow_level;

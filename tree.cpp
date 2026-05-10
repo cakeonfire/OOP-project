@@ -38,6 +38,15 @@ TreeNode* Tree::add_node(string parent_name, string node_name) {
     return new_node;
 }
 
+
+int Tree::entity_count(void) {
+    if (this->root == nullptr) {
+        return 0;
+    }
+    return this->root->entity_count();
+}
+
+
 void Tree::clear(void) {
     this->root->clear();
 }
@@ -119,6 +128,19 @@ bool TreeNode::remove_entity(Entity* entity) {
     }
     return false;
 
+}
+
+
+int TreeNode::entity_count(void) {
+    if (this->is_leaf()) {
+        return this->entities.size();
+    }
+
+    int res = 0;
+    for (auto* child : this->children) {
+        res += child->entity_count();
+    }
+    return res;
 }
 
 
