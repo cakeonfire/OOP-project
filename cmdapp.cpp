@@ -649,12 +649,27 @@ void _rec_save(ofstream& out_file, TreeNode* node) {
 }
 
 
+bool _prompt_y_n(const string& msg) {
+    string confirm;
+    cout << msg;
+    getline(cin, confirm);
+    confirm.erase(0, confirm.find_first_not_of(" \n\r\t"));
+    confirm.erase(confirm.find_last_not_of(" \n\r\t")+1);
+
+    return (confirm == "Y" || confirm == "y");
+}
+
+
 void _exec_cmd_SAVE(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
     ifstream check(cmd_args[0]);
     if (check.good()) {
-        cout << "File \"" << cmd_args[0] << "\" already exists\n";
-        check.close();
-        return;
+        bool confirm = _prompt_y_n("File \"" + cmd_args[0] + "\" already exists, override? [Y/n]: ");
+
+        if (!confirm) {
+            cout << "Aborting operation\n";
+            check.close();
+            return;
+        }
     }
 
     ofstream out_file(cmd_args[0]);
