@@ -106,12 +106,12 @@ void TreeNode::_rec_print(int lvl) {
     }
 }
 
-bool TreeNode::is_leaf(void) {
-    return (this->children.size() == 0);
-}
-
 void TreeNode::print() {
     this->_rec_print(0);
+}
+
+bool TreeNode::is_leaf(void) {
+    return (this->children.size() == 0);
 }
 
 void TreeNode::add_entity(Entity* entity) {
