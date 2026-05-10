@@ -1,9 +1,11 @@
 #include <iostream>
-#include <string>
 #include <sstream>
 #include <fstream>
+#include <string>
+#include <cctype>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 #include "cmdapp.h"
 #include "tree.h"
@@ -53,8 +55,10 @@ bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
         cout << "Invalid arguments for CD command: expected 1 argument: destination node\n";
 
     } else if (cmd == CMD::MO) {
-        if (cmd_args.size() >= 1) return true;
-        cout << "Invalid arguments for MO command: expected at least 1 argument: object name, arguments...\n";
+        return true;
+        // NOTE MO cmd should do more precise arg validation internally
+        //if (cmd_args.size() >= 1) return true;
+        //cout << "Invalid arguments for MO command: expected at least 1 argument: object name, arguments...\n";
 
     } else if (cmd == CMD::DO) {
         if (cmd_args.size() == 1) return true;
@@ -563,10 +567,6 @@ void _exec_cmd_MDO_old(const std::vector<std::string>& cmd_args, Tree* tree, Tre
 
 void _exec_cmd_DIR(const std::vector<std::string>& cmd_args, Tree* tree, TreeNode* current_node) {
     if (current_node->is_leaf() && current_node->entities.size() > 0) {
-        //cout << current_node->name << ":\n";
-        //for (auto* entity : current_node->entities) {
-        //    cout << "    " << entity->get_name() << "\n";
-        //}
         for (auto* entity : current_node->entities) cout << entity->get_label() << "\n";
         return;
     }
@@ -716,6 +716,8 @@ void cmd_loop(Tree* tree) {
         cmd_args.clear();  // clear for the next command
         cout << "\n[" << node_ptr->name << "]> ";
         cmd_str = load_cmd(cmd_args);
+        // allow for lower-case cmds
+        transform(cmd_str.begin(), cmd_str.end(), cmd_str.begin(), [](unsigned char c) { return toupper(c); });
         cmd = str_to_cmd(cmd_str);
 
         if (cmd_str.size() == 0) {
@@ -759,6 +761,7 @@ void cmd_loop(Tree* tree) {
                 running = false;
                 break;
             default:
+                // should be caught earlier
                 throw invalid_argument(cmd_to_str(cmd));
         }
     }
