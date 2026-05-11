@@ -55,10 +55,10 @@ bool _validate_cmd_args(CMD cmd, std::vector<std::string>& cmd_args) {
         cout << "Invalid arguments for CD command: expected 1 argument: destination node\n";
 
     } else if (cmd == CMD::MO) {
-        return true;
+        //return true;
         // NOTE MO cmd should do more precise arg validation internally
-        //if (cmd_args.size() >= 1) return true;
-        //cout << "Invalid arguments for MO command: expected at least 1 argument: object name, arguments...\n";
+        if (cmd_args.size() >= 1) return true;
+        cout << "Invalid arguments for MO command: expected at least 1 argument: object name, arguments...\n";
 
     } else if (cmd == CMD::DO) {
         if (cmd_args.size() == 1) return true;
@@ -244,8 +244,8 @@ string _prompt_input(const string& msg) {
 }
 
 
-void _MDO_inner(Entity* entity) {
-}
+//void _MDO_inner(Entity* entity) {
+//}
 
 
 void _exec_cmd_MDO(const vector<string>& cmd_args, Tree* tree, TreeNode* current_node) {
@@ -310,7 +310,7 @@ void _exec_cmd_MDO(const vector<string>& cmd_args, Tree* tree, TreeNode* current
         }
 
         // Case for all HostileEntities (Zombie, Skeleton, Slime)
-        if (current_node->parent->name == EE::HOSTILE_ENTITY || current_node->name == EE::UNDEAD) {
+        if (current_node->parent->name == EE::HOSTILE_ENTITY || current_node->parent->name == EE::UNDEAD) {
             aggro_str = _prompt_input("aggression range: ");
             if (aggro_str.size() > 0) aggro_range = stoi(aggro_str);
 

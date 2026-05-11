@@ -24,7 +24,7 @@ HostileEntity::~HostileEntity() {}
 int HostileEntity::get_aggression_range(void) const { return this->aggression_range; }
 void HostileEntity::set_aggression_range(int new_aggr_range) { this->aggression_range = max(0, new_aggr_range); }
 int HostileEntity::get_experience_reward(void) const { return this->experience_reward; }
-void HostileEntity::set_experience_reward(int new_exp_reward) { this->experience_reward = new_exp_reward; }
+void HostileEntity::set_experience_reward(int new_exp_reward) { this->experience_reward = max(0, new_exp_reward); }
 
 string HostileEntity::get_species(void) const { return "HostileEntity"; };
 void HostileEntity::print_info(void) const {
@@ -48,9 +48,9 @@ Undead::Undead(string name, double health, double damage, int exp_reward)
 Undead::~Undead() {}
 
 int Undead::get_revive_count(void) const { return this->revive_count; }
-void Undead::set_revive_count(int new_rv_count) { this->revive_count = new_rv_count; }
+void Undead::set_revive_count(int new_rv_count) { this->revive_count = max(0, new_rv_count); }
 int Undead::get_revive_cooldown(void) const { return this->revive_cooldown; }
-void Undead::set_revive_cooldown(int new_rv_cd) { this->revive_cooldown = new_rv_cd; }
+void Undead::set_revive_cooldown(int new_rv_cd) { this->revive_cooldown = max(0, new_rv_cd); }
 bool Undead::can_revive(void) const { return this->revive_count > 0; }
 
 string Undead::get_species(void) const { return "Undead"; }
@@ -148,7 +148,7 @@ Skeleton::Skeleton(const string& import_str) {
 Skeleton::~Skeleton() {}
 
 int Skeleton::get_accuracy(void) const { return this->accuracy; }
-void Skeleton::set_accuracy(int new_accuracy) { this->accuracy = new_accuracy; }
+void Skeleton::set_accuracy(int new_accuracy) { this->accuracy = max(0, new_accuracy); }
 int Skeleton::get_bow_range(void) const { return this->bow_range; }
 void Skeleton::set_bow_range(int new_bow_range) { this->bow_range = max(0, new_bow_range); }
 
@@ -205,7 +205,7 @@ Slime::~Slime() {}
 Slime::SlimeSize Slime::get_size(void) const { return this->size; }
 void Slime::set_size(Slime::SlimeSize new_size) { this->size = new_size; }
 int Slime::get_resistance(void) const { return this->resistance; }
-void Slime::set_resistance(int new_resist) { this->resistance = new_resist; }
+void Slime::set_resistance(int new_resist) { this->resistance = max(0, new_resist); }
 
 bool Slime::can_split(void) const {
     switch (this->size) {
